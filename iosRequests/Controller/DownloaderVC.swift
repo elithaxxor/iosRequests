@@ -12,13 +12,19 @@ import SwiftSoup
 // TODO --> Create Local Notiifcatino Center for login detols
 
 
+// ftp://arobotsandbox.asuscomm.com
+
 
 @IBDesignable
-class DownloaderVC: ViewControllerLogger {
+class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
     var dl = downloaderLogic()
     static let down = DownloaderVC()
     let cellid = "cellid"
-    var tableView: UITableView!
+    
+    
+    
+    @IBOutlet weak var tableView: UITableView!
+    
     
     
     var IP: String = ""
@@ -30,20 +36,48 @@ class DownloaderVC: ViewControllerLogger {
     @IBOutlet weak var progressLbl: UILabel!
     @IBOutlet weak var urlLbl: UILabel!
     
-
-    // ADD Outlet pair to storyboard--> use oublsiher to update.
-    @IBOutlet weak var urlTextView: UITextView? {
-        didSet {
-            let text = urlTextView?.text
-            NotificationCenter.default.post(name: NSNotification.Name.downloadURL, object: nil)
+    var imagePicker = UIImagePickerController()
+    
+    @IBAction func openLibraryButton(sender: AnyObject) {
+        if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+            //var imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.allowsEditing = true
+            imagePicker.sourceType = .photoLibrary
+            present(imagePicker, animated: true, completion: nil)
+            // self.present(imagePicker, animated: true, completion: nil)
             
         }
     }
-    @IBAction func urlTextView(_ sender: UITextView?) {
-        print("[!] urlTextView actio initionatied")
-        NotificationCenter.default.post(name: NSNotification.Name.downloadURL, object: nil)
-        
+    
+    
+    
+    @IBAction func openCameraButton(sender: AnyObject) {
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {
+            var imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = .camera;
+            imagePicker.allowsEditing = false
+            imagePicker.cameraDevice = .front
+            
+            self.present(imagePicker, animated: true, completion: nil)
+        }
     }
+    
+    
+    @IBOutlet weak var uiSearchBar: UISearchBar! {
+        
+        didSet {
+            let text = uiSearchBar?.text
+            print("[!] UI SearchBar Text \(text)")
+            urlParser.fetch.changeUrl(newLink: text)
+            NotificationCenter.default.post(name: NSNotification.Name.soupHref, object: nil)
+        }
+    }
+    
+    
+    
+    
     
     @IBAction func uploadBtn(_ sender: UIButton) {
         print("[!] User has initiated uploading button")
@@ -53,22 +87,29 @@ class DownloaderVC: ViewControllerLogger {
     
     @IBAction func ftpBtn (_ sender: UIButton) {
         print("[FTP] Pressed")
-        let fetchURL = urlParser.fetch.changeUrl(newLink: urlTextView?.text)
+        let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
         handleFTP(textViewData: fetchURL)
+        //  performSegue(withIdentifier: "FtpView", sender: self)
+        
+        
     }
     @IBAction func smbBtn(_ sender: UIButton) {
         print("[SMB] Btn Pressed ")
-        let fetchURL = urlParser.fetch.changeUrl(newLink: urlTextView?.text)
+        let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
+        print("[SMB] URL \(fetchURL)")
         handleSMB(textViewData: fetchURL)
+        
     }
     @IBAction func httpSoupBtn(_ sender: UIButton) {
         print("[HTTP-Soup] Btn Pressed ")
-        let fetchURL = urlParser.fetch.changeUrl(newLink: urlTextView?.text)
+        let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
         handleHTTPSoup(textViewData: fetchURL)
+        performDisplayHrefTableView()
+        
     }
     @IBAction func httpDwnBtn(_ sender: UIButton) {
         print("[HTTP-DWNLD] Btn Pressed ")
-        handleHttpDwn(textViewData: urlTextView?.text)
+        handleHttpDwn(textViewData: uiSearchBar?.text)
     }
     
     func handleHttpDwn(textViewData: String?) {
@@ -95,16 +136,16 @@ class DownloaderVC: ViewControllerLogger {
             
             let ahrefArr = ["userInfo": [ahref]]
             let ptagArr = ["userInfo": [ptag]]
-            
-            NotificationCenter.default
-                .post(name: NSNotification.Name.soupHref,
-                      object: nil,
-                      userInfo: ahrefArr)
-            
-            NotificationCenter.default
-                .post(name: NSNotification.Name.soupPtags,
-                      object: nil,
-                      userInfo: ptagArr)
+            //
+            //            NotificationCenter.default
+            //                .post(name: NSNotification.Name.soupHref,
+            //                      object: nil,
+            //                      userInfo: ahrefArr)
+            //
+            //            NotificationCenter.default
+            //                .post(name: NSNotification.Name.soupPtags,
+            //                      object: nil,
+            //                      userInfo: ptagArr)
             
             performDisplayHrefTableView()
             
@@ -117,6 +158,9 @@ class DownloaderVC: ViewControllerLogger {
     // TODO: Setup perform segue for after the sou list populates
     private func performDisplayHrefTableView() {
         print("[!] Performing segue")
+        performSegue(withIdentifier: "HrefView", sender: self)
+        
+        
         
     }
     
@@ -127,8 +171,6 @@ class DownloaderVC: ViewControllerLogger {
     @objc func didUpdateNotification(_ notification: Notification) throws {
         print("[!].. Editing notification center.. ")
         guard let fetchURL = notification.object as? String else { throw notificationError.passNotificationErr }
-        urlTextView?.text = fetchURL
-        urlLbl.text = fetchURL
         try?dl.setSession()
         
     }
@@ -156,13 +198,10 @@ class DownloaderVC: ViewControllerLogger {
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSoupNotication), name: .soupHref, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSoupNotication), name: .soupPtags, object: nil)
         
-        tableView.delegate = self
-        tableView.dataSource = self
         
-        // TODO: BUG AREA 
-        tableView.register(UITableView.self, forCellReuseIdentifier: "cellid")
-        tableView.register(UrlTableViewCell.self, forCellReuseIdentifier: "cellid")
-
+        // TODO: BUG AREA
+        
+        
         // try?dl.setSession()
     }
     
@@ -189,18 +228,44 @@ class DownloaderVC: ViewControllerLogger {
     
     func handleFTP(textViewData: String?) {
         print("[!] Handling FTP Data")
-        let ftpURL = "ftp://\(urlTextView?.text):21"
+        let ftpURL = "ftp://\(urlParser.url.description):21"
         print("url textview set \(ftpURL)")
         guard dl.url == ftpURL else { return }
+        print("[!] dl.url FTP - \(ftpURL)")
+        performSegue(withIdentifier: "FtpView", sender: self)
+        
+        
         try? dl.setSession()
     }
     func handleSMB(textViewData: String?) {
         print("[!] Handling SMB Data")
-        let smbURL = "smb://\(urlTextView?.text):445"
+        let smbURL = "smb://\(urlParser.url.description):445"
         guard dl.url == smbURL else { return }
+        print("[!] HANDLE SMB URL \(smbURL)")
+        print("[!] dl.url FTP - \(smbURL)")
+        
+        performSegue(withIdentifier: "SmbView", sender: self)
+        
+        
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "FtpView"  {
+            let seg = segue.destination as? FtpView
+            let url = self.uiSearchBar.text
+            seg?.ftpURL = url ?? "arobotsandbox.asuscomm.com"
     
+        }
+        
+        if segue.identifier == "SmbView"  {
+            let seg = segue.destination as? SmbView
+            let url = self.uiSearchBar.text
+            seg?.smbURL = url ?? "arobotsandbox.asuscomm.com"
+            
+        }
+        
+        
+    }
 }
 
 enum notificationError: Error {
