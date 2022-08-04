@@ -89,7 +89,7 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("[FTP] Pressed")
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
         handleFTP(textViewData: fetchURL)
-        //  performSegue(withIdentifier: "FtpView", sender: self)
+        performSegue(withIdentifier: "FtpSeg", sender: self)
         
         
     }
@@ -97,7 +97,10 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("[SMB] Btn Pressed ")
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
         print("[SMB] URL \(fetchURL)")
+
         handleSMB(textViewData: fetchURL)
+        performSegue(withIdentifier: "SmbView", sender: self)
+
         
     }
     @IBAction func httpSoupBtn(_ sender: UIButton) {
@@ -232,7 +235,7 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("url textview set \(ftpURL)")
         guard dl.url == ftpURL else { return }
         print("[!] dl.url FTP - \(ftpURL)")
-        performSegue(withIdentifier: "FtpView", sender: self)
+        performSegue(withIdentifier: "FtpSeg", sender: self)
         
         
         try? dl.setSession()
@@ -250,10 +253,10 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "FtpView"  {
+        if segue.identifier == "FtpSeg"  {
             let seg = segue.destination as? FtpView
             let url = self.uiSearchBar.text
-            seg?.ftpURL = url ?? "arobotsandbox.asuscomm.com"
+            seg?.ftpURL = url ?? "ftp://arobotsandbox.asuscomm.com:21"
     
         }
         
@@ -261,6 +264,13 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
             let seg = segue.destination as? SmbView
             let url = self.uiSearchBar.text
             seg?.smbURL = url ?? "arobotsandbox.asuscomm.com"
+            
+        }
+        
+        if segue.identifier == "HrefSoup"  {
+            let seg = segue.destination as? HrefSoup
+            let url = self.uiSearchBar.text
+            seg?.soupURL = url ?? "arobotsandbox.asuscomm.com"
             
         }
         

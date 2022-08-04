@@ -29,6 +29,7 @@
 		65EE7472289B97F500C67BDB /* HrefView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7471289B97F500C67BDB /* HrefView.swift */; };
 		65EE7474289BA31E00C67BDB /* SmbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7473289BA31E00C67BDB /* SmbView.swift */; };
 		65EE7478289BA81D00C67BDB /* FtpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7477289BA81D00C67BDB /* FtpView.swift */; };
+		65EE747A289BACF100C67BDB /* HrefSoup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7479289BACF100C67BDB /* HrefSoup.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		65EE7471289B97F500C67BDB /* HrefView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HrefView.swift; sourceTree = "<group>"; };
 		65EE7473289BA31E00C67BDB /* SmbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmbView.swift; sourceTree = "<group>"; };
 		65EE7477289BA81D00C67BDB /* FtpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FtpView.swift; sourceTree = "<group>"; };
+		65EE7479289BACF100C67BDB /* HrefSoup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HrefSoup.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +74,7 @@
 		651D1668289B0333003BBC13 = {
 			isa = PBXGroup;
 			children = (
+				65EE7479289BACF100C67BDB /* HrefSoup.swift */,
 				65EE7473289BA31E00C67BDB /* SmbView.swift */,
 				651D1673289B0333003BBC13 /* iosRequests */,
 				651D1672289B0333003BBC13 /* Products */,
@@ -265,6 +268,7 @@
 				651D16A9289B049D003BBC13 /* DownloaderVC.swift in Sources */,
 				651D1677289B0333003BBC13 /* SceneDelegate.swift in Sources */,
 				651D167F289B0333003BBC13 /* iosRequests.xcdatamodeld in Sources */,
+				65EE747A289BACF100C67BDB /* HrefSoup.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
