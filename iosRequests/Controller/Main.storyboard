@@ -235,12 +235,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="smbWeb" translatesAutoresizingMaskIntoConstraints="NO" id="wsS-wf-o99">
+                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="webView" translatesAutoresizingMaskIntoConstraints="NO" id="wsS-wf-o99">
                                 <rect key="frame" x="25" y="136" width="349" height="527"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="smbWeb">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
+                                <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="webView">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>

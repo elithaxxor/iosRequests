@@ -96,7 +96,6 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("[HTTP-Soup] Btn Pressed ")
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
         performDisplayHrefTableView()
-        
     }
     @IBAction func httpDwnBtn(_ sender: UIButton) {
         print("[HTTP-DWNLD] Btn Pressed ")
@@ -117,12 +116,7 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("[!] Performing segue")
         performSegue(withIdentifier: "HrefSoup", sender: self)
         
-        
-        
     }
-    
-    
-    
     
     // TODO: Check on setSession, see if it needs a var to be passed.
     @objc func didUpdateNotification(_ notification: Notification) throws {

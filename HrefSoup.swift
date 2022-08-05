@@ -211,10 +211,12 @@ class HrefSoup: ViewControllerLogger
             }
             group.wait()
             DispatchQueue.main.async { [weak self] in
+                group.enter()
                 print("[!][!] MAIN THREAD STARTED [!][!] ")
                 self?.tableView.reloadData()
                 self?.setupViews()
                 print("[!][!] MAIN THREAD THREAD ENDED [!][!] ")
+                group.leave()
             }
             
             
