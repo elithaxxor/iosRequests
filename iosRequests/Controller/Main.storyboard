@@ -280,25 +280,37 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" findInteractionEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jI5-wo-gc3" userLabel="textView">
-                                <rect key="frame" x="41" y="69" width="308" height="606"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <color key="textColor" systemColor="systemBlueColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                <dataDetectorType key="dataDetectorTypes" link="YES" address="YES"/>
-                            </textView>
                             <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="kC9-su-LHS" userLabel="search Bar" customClass="searchBar">
                                 <rect key="frame" x="0.0" y="675" width="390" height="56"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Rpz-gN-JTM" userLabel="tableView">
+                                <rect key="frame" x="16" y="44" width="358" height="631"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellid" rowHeight="48" id="n4f-Uf-7Wr">
+                                        <rect key="frame" x="0.0" y="50" width="358" height="48"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="n4f-Uf-7Wr" id="QYP-R6-zLx">
+                                            <rect key="frame" x="0.0" y="0.0" width="358" height="48"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                        <accessibility key="accessibilityConfiguration">
+                                            <bool key="isElement" value="YES"/>
+                                        </accessibility>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bRP-Yw-7Ru"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="F7K-xy-3qw"/>
+                    <connections>
+                        <outlet property="tableView" destination="Rpz-gN-JTM" id="7cN-Oa-FSv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RzE-E3-uRq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
