@@ -10,6 +10,9 @@ import WebKit
 
 @IBDesignable
 class SmbView: ViewControllerLogger {
+    
+    fileprivate let parseUrl = urlParser.url.lowercased()
+    
     @IBInspectable private let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
     @IBInspectable var smbURL: String = ""
     @IBOutlet weak var smbTextField: UITextView!
@@ -26,17 +29,27 @@ class SmbView: ViewControllerLogger {
         }
     }
     fileprivate func parseUIView(_ uiView: WKWebView) {
-        let url = smbURL.lowercased()
-        let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
+        let group = DispatchGroup()
+
+        group.wait()
+        group.enter()
+
+        let url = self.smbURL.lowercased()
+        let backupURL = "smb://arobotsandbox.asuscomm.com:445"
+        let backupURLformatted = URL(string: "smb://arobotsandbox.asuscomm.com:139")!
+        let urlFormatted = URL(string: url)
         
+        if url != nil || backupURLformatted != nil {
+            let storedURL = URL(string: self.parseUrl)
+            let requestURL = URLRequest(url: urlFormatted ?? backupURLformatted)
+            print("[!] Starting Request on \(requestURL)")
+            self.smbWeb?.load(requestURL)
+        }
+        group.leave()
         
-        let requestURL = URLRequest(url: URL(string: url)!)
-        print("[!] Starting Request on \(requestURL)")
-        smbWeb?.load(requestURL)
     }
     
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
@@ -50,6 +63,6 @@ class SmbView: ViewControllerLogger {
         print("[!] View Did Load- Passed \(smbURL)")
     }
     
-
-
+    
+    
 }

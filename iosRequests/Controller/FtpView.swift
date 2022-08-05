@@ -62,7 +62,7 @@ class  FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
         let request =  URLRequest(url: url!)
         
         
-        FtpTextField.text = url?.absoluteString
+        FtpTextField?.text = url?.absoluteString
         //FtpTextField?.text = request.description
         ftpWeb!.load(request)
     }
