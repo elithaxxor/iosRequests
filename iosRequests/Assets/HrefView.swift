@@ -9,12 +9,12 @@ import Foundation
 import UIKit
 
 class HrefView: ViewControllerLogger {
+    
+    
     @IBOutlet weak var textView: UITextView?
-    
-    
-    
-    @IBOutlet weak var searchBar: UISearchBar!
-    
+    @IBOutlet weak var searchBar: UISearchBar?
+    var soupURL: String = ""
+
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -75,7 +75,6 @@
 			isa = PBXGroup;
 			children = (
 				65EE7479289BACF100C67BDB /* HrefSoup.swift */,
-				65EE7473289BA31E00C67BDB /* SmbView.swift */,
 				651D1673289B0333003BBC13 /* iosRequests */,
 				651D1672289B0333003BBC13 /* Products */,
 			);
@@ -114,6 +113,7 @@
 		651D168C289B039B003BBC13 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				65EE7473289BA31E00C67BDB /* SmbView.swift */,
 				65EE7477289BA81D00C67BDB /* FtpView.swift */,
 				651D16A6289B049D003BBC13 /* DownloaderVC.swift */,
 				651D1691289B03FA003BBC13 /* Main.storyboard */,

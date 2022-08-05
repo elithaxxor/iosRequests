@@ -79,11 +79,11 @@
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="DownloaderVC" customModule="iosRequests" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SA9-9K-hHk">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SA9-9K-hHk">
                                 <rect key="frame" x="302" y="739.66666666666663" width="72" height="35"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="35" id="YYL-Q2-YOo"/>
@@ -94,7 +94,7 @@
                                     <action selector="openLibraryButtonWithSender:" destination="BYZ-38-t0r" eventType="touchDragInside" id="s8m-z6-5Qa"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FSU-9d-fIX">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FSU-9d-fIX">
                                 <rect key="frame" x="16" y="740" width="81" height="34.666666666666629"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="gray" title="camera"/>
@@ -102,8 +102,8 @@
                                     <action selector="openCameraButtonWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zbl-Ga-k7L"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yb1-pd-M5H">
-                                <rect key="frame" x="166" y="574" width="65" height="50"/>
+                            <button opaque="NO" contentMode="scaleToFill" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yb1-pd-M5H">
+                                <rect key="frame" x="166" y="594" width="65" height="30"/>
                                 <menu key="menu" id="Kdh-3x-EvS">
                                     <children>
                                         <command title="smb" discoverabilityTitle="" menuElementState="on" id="sTK-jS-LhA" userLabel="smb">
@@ -130,7 +130,7 @@
                                 </menu>
                                 <state key="normal" title="get"/>
                             </button>
-                            <stackView opaque="NO" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mXi-QC-S1Z">
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mXi-QC-S1Z">
                                 <rect key="frame" x="16" y="504" width="390" height="0.0"/>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gHb-aY-ce4">
@@ -138,8 +138,8 @@
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="send"/>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" ambiguous="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="r2g-Sq-HjG">
-                                <rect key="frame" x="117" y="562" width="150" height="4"/>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="r2g-Sq-HjG">
+                                <rect key="frame" x="117" y="582" width="150" height="4"/>
                             </progressView>
                             <searchBar contentMode="redraw" fixedFrame="YES" barStyle="black" searchBarStyle="minimal" text="" placeholder="ipv4, smb, ftp or http(s) " translatesAutoresizingMaskIntoConstraints="NO" id="xpW-gy-apI">
                                 <rect key="frame" x="32" y="608" width="358" height="140"/>
@@ -181,16 +181,10 @@
                         <outlet property="progressBar" destination="r2g-Sq-HjG" id="BO2-D8-dYO"/>
                         <outlet property="uiSearchBar" destination="xpW-gy-apI" id="T27-UU-ckN"/>
                         <outlet property="view" destination="agh-Wz-UlU" id="80u-3o-soj"/>
-                        <segue destination="UO6-c0-gqw" kind="popoverPresentation" identifier="HrefView" popoverAnchorView="8bC-Xf-vdC" id="QPH-st-wFS">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
+                        <segue destination="UO6-c0-gqw" kind="show" identifier="HrefView" id="QPH-st-wFS"/>
                         <segue destination="Eih-fp-ZcH" kind="show" identifier="HrefSoup" id="WUt-Ni-Je9"/>
-                        <segue destination="cJP-cQ-lQT" kind="popoverPresentation" identifier="FtpSeg" popoverAnchorView="8bC-Xf-vdC" id="ODe-1f-XPR">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
-                        <segue destination="bnv-0v-gnw" kind="popoverPresentation" identifier="SmbView" popoverAnchorView="8bC-Xf-vdC" id="Awr-QO-hVo">
-                            <popoverArrowDirection key="popoverArrowDirection" up="YES" down="YES" left="YES" right="YES"/>
-                        </segue>
+                        <segue destination="cJP-cQ-lQT" kind="show" identifier="FtpSeg" id="ODe-1f-XPR"/>
+                        <segue destination="bnv-0v-gnw" kind="show" identifier="SmbView" id="Awr-QO-hVo"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -200,7 +194,7 @@
         <!--HrefView-->
         <scene sceneID="Pdj-ZH-bUa">
             <objects>
-                <viewController storyboardIdentifier="HrefView" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UO6-c0-gqw" customClass="HrefView" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HrefView" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UO6-c0-gqw" customClass="HrefView" customModule="iosRequests" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="RTZ-yb-5Mz" customClass="HrefView">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -227,10 +221,7 @@
                         <viewLayoutGuide key="safeArea" id="10m-oR-mvz"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <connections>
-                        <outlet property="searchBar" destination="lqQ-bw-KAF" id="v7m-dO-61i"/>
-                        <outlet property="textView" destination="R24-Wg-HrY" id="vXn-X4-nJ9"/>
-                    </connections>
+                    <navigationItem key="navigationItem" id="agi-VH-RgC"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y5m-9g-QlB" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -244,13 +235,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="L2q-bT-rTa">
-                                <rect key="frame" x="25" y="716" width="390" height="56"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </searchBar>
                             <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="smbWeb" translatesAutoresizingMaskIntoConstraints="NO" id="wsS-wf-o99">
-                                <rect key="frame" x="25" y="64" width="349" height="628"/>
+                                <rect key="frame" x="25" y="136" width="349" height="527"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="smbWeb">
@@ -258,12 +244,27 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="L2q-bT-rTa">
+                                <rect key="frame" x="4" y="663" width="390" height="56"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="pmR-SG-9wu" userLabel="textField">
+                                <rect key="frame" x="79" y="53" width="240" height="75"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Z51-VA-8S4"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
+                    <navigationItem key="navigationItem" id="RfM-Jq-Iu2"/>
                     <connections>
                         <outlet property="searchBar" destination="L2q-bT-rTa" id="hSd-gV-cE3"/>
+                        <outlet property="smbTextField" destination="pmR-SG-9wu" id="neZ-qN-YUK"/>
                         <outlet property="smbWeb" destination="wsS-wf-o99" id="lj3-A2-WU6"/>
                     </connections>
                 </viewController>
@@ -274,17 +275,13 @@
         <!--HrefSoup-->
         <scene sceneID="jjU-9W-UH0">
             <objects>
-                <viewController storyboardIdentifier="HrefSoup" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Eih-fp-ZcH" userLabel="HrefSoup" customClass="HrefSoup" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="HrefSoup" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Eih-fp-ZcH" userLabel="HrefSoup" customClass="HrefSoup" customModule="iosRequests" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="xbl-s4-O97" userLabel="HrefSoup" customClass="HrefView">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="MvR-2w-Nvr">
-                                <rect key="frame" x="140" y="328" width="308" height="707"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" findInteractionEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jI5-wo-gc3">
-                                <rect key="frame" x="41" y="69" width="308" height="630"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="center" findInteractionEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jI5-wo-gc3" userLabel="textView">
+                                <rect key="frame" x="41" y="69" width="308" height="606"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <color key="textColor" systemColor="systemBlueColor"/>
@@ -292,8 +289,8 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <dataDetectorType key="dataDetectorTypes" link="YES" address="YES"/>
                             </textView>
-                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="kC9-su-LHS">
-                                <rect key="frame" x="0.0" y="699" width="390" height="56"/>
+                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="kC9-su-LHS" userLabel="search Bar" customClass="searchBar">
+                                <rect key="frame" x="0.0" y="675" width="390" height="56"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
@@ -302,34 +299,30 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="F7K-xy-3qw"/>
-                    <connections>
-                        <outlet property="searchBar" destination="kC9-su-LHS" id="fnH-0j-gJl"/>
-                        <outlet property="textView" destination="jI5-wo-gc3" id="CbH-eI-LCS"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="RzE-E3-uRq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="611" y="-675"/>
+            <point key="canvasLocation" x="610.76923076923072" y="-675.35545023696682"/>
         </scene>
         <!--FtpView-->
         <scene sceneID="7cU-4G-r07">
             <objects>
-                <viewController storyboardIdentifier="FtpView" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cJP-cQ-lQT" userLabel="FtpView" customClass="FtpView" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FtpView" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cJP-cQ-lQT" userLabel="FtpView" customClass="FtpView" customModule="iosRequests" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="7gU-zt-sMc" userLabel="Ftp View" customClass="HrefView">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="uzh-DT-osO">
-                                <rect key="frame" x="140" y="328" width="308" height="707"/>
+                                <rect key="frame" x="140" y="328" width="217" height="59"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             </stackView>
-                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="Cs7-cn-VZV">
-                                <rect key="frame" x="0.0" y="699" width="390" height="56"/>
+                            <searchBar contentMode="redraw" fixedFrame="YES" placeholder="find text" translatesAutoresizingMaskIntoConstraints="NO" id="Cs7-cn-VZV" userLabel="FtpSearchBar">
+                                <rect key="frame" x="6" y="639" width="368" height="56"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
-                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="FtpWeb" translatesAutoresizingMaskIntoConstraints="NO" id="YmH-Pb-coZ">
-                                <rect key="frame" x="26" y="44" width="338" height="629"/>
+                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="FtpWeb" translatesAutoresizingMaskIntoConstraints="NO" id="YmH-Pb-coZ" userLabel="FtpWeb">
+                                <rect key="frame" x="31" y="144" width="315" height="462"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="FtpWeb">
@@ -337,14 +330,19 @@
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8Uc-T5-xP7" userLabel="FtpTextField">
+                                <rect key="frame" x="82" y="64" width="217" height="59"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="textColor" systemColor="labelColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hsb-VQ-a5Y"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <connections>
-                        <outlet property="ftpWeb" destination="YmH-Pb-coZ" id="MIf-IL-NM5"/>
-                        <outlet property="searchBar" destination="Cs7-cn-VZV" id="pcX-kf-Rbb"/>
-                    </connections>
+                    <navigationItem key="navigationItem" id="K8x-8Z-LqO"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bBn-3M-t6y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

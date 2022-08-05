@@ -20,9 +20,6 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     var dl = downloaderLogic()
     static let down = DownloaderVC()
     let cellid = "cellid"
-    
-    
-    
     @IBOutlet weak var tableView: UITableView!
     
     
@@ -68,15 +65,11 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     @IBOutlet weak var uiSearchBar: UISearchBar! {
         
         didSet {
-            let text = uiSearchBar?.text
+            let text = uiSearchBar?.text?.lowercased()
             print("[!] UI SearchBar Text \(text)")
             urlParser.fetch.changeUrl(newLink: text)
-            NotificationCenter.default.post(name: NSNotification.Name.soupHref, object: nil)
         }
     }
-    
-    
-    
     
     
     @IBAction func uploadBtn(_ sender: UIButton) {
@@ -90,8 +83,6 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
         handleFTP(textViewData: fetchURL)
         performSegue(withIdentifier: "FtpSeg", sender: self)
-        
-        
     }
     @IBAction func smbBtn(_ sender: UIButton) {
         print("[SMB] Btn Pressed ")
@@ -100,13 +91,10 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
 
         handleSMB(textViewData: fetchURL)
         performSegue(withIdentifier: "SmbView", sender: self)
-
-        
     }
     @IBAction func httpSoupBtn(_ sender: UIButton) {
         print("[HTTP-Soup] Btn Pressed ")
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
-        handleHTTPSoup(textViewData: fetchURL)
         performDisplayHrefTableView()
         
     }
@@ -123,45 +111,11 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     
     
     public var soupLinks : [Element] = [Element]()
-    func handleHTTPSoup(textViewData: String?){
-        //https://www.youtube.com/watch?v=z2Z90aJUXhg
-        do {
-            let html = textViewData!
-            let doc: Document = try! SwiftSoup.parse(html)
-            let ptag: [Element] = try! doc.select("p").array()
-            let ahref: [Element] = try! doc.select("a").array()
-            let count: Int = ahref.count
-            
-            // TODO: Add Custom Error Handling
-            print("[+] \(ptag) [\(count)]")
-            print("[+] \(ahref)")
-            print("[+] [\(count)] available downloads")
-            
-            let ahrefArr = ["userInfo": [ahref]]
-            let ptagArr = ["userInfo": [ptag]]
-            //
-            //            NotificationCenter.default
-            //                .post(name: NSNotification.Name.soupHref,
-            //                      object: nil,
-            //                      userInfo: ahrefArr)
-            //
-            //            NotificationCenter.default
-            //                .post(name: NSNotification.Name.soupPtags,
-            //                      object: nil,
-            //                      userInfo: ptagArr)
-            
-            performDisplayHrefTableView()
-            
-        } catch Exception.Error(type: let type, Message: let msg) {
-            print("[!] Error \(msg)")
-            print("[!] type \(type)")
-        }
-    }
     
     // TODO: Setup perform segue for after the sou list populates
     private func performDisplayHrefTableView() {
         print("[!] Performing segue")
-        performSegue(withIdentifier: "HrefView", sender: self)
+        performSegue(withIdentifier: "HrefSoup", sender: self)
         
         
         
@@ -198,24 +152,14 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         progressBar?.progress = 0
         
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateNotification), name: .downloadURL , object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSoupNotication), name: .soupHref, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(didUpdateSoupNotication), name: .soupPtags, object: nil)
-        
-        
+
         // TODO: BUG AREA
         
         
         // try?dl.setSession()
     }
     
-    @objc func didUpdateSoupNotication(_ notification: Notification) throws {
-        guard let soupArray: Array = notification.object as? [Element] else { throw notificationError.fetchSoupErr}
-        print("[+] Soup Array \(soupArray)")
-        soupLinks = soupArray.self
-        // performDisplayHrefSegue() --> ** May run twice, as href and ptags are sent over.
-        
-    }
-    
+  
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -235,10 +179,9 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("url textview set \(ftpURL)")
         guard dl.url == ftpURL else { return }
         print("[!] dl.url FTP - \(ftpURL)")
-        performSegue(withIdentifier: "FtpSeg", sender: self)
+        self.performSegue(withIdentifier: "FtpSeg", sender: self)
         
         
-        try? dl.setSession()
     }
     func handleSMB(textViewData: String?) {
         print("[!] Handling SMB Data")
@@ -247,30 +190,32 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         print("[!] HANDLE SMB URL \(smbURL)")
         print("[!] dl.url FTP - \(smbURL)")
         
-        performSegue(withIdentifier: "SmbView", sender: self)
-        
-        
+        self.performSegue(withIdentifier: "SmbView", sender: self)
+
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "FtpSeg"  {
             let seg = segue.destination as? FtpView
             let url = self.uiSearchBar.text
+            print("[!] URL for FTP being passed: \(String(describing: url))")
+            seg?.FtpTextField?.text = url
             seg?.ftpURL = url ?? "ftp://arobotsandbox.asuscomm.com:21"
     
         }
         
         if segue.identifier == "SmbView"  {
             let seg = segue.destination as? SmbView
-            let url = self.uiSearchBar.text
-            seg?.smbURL = url ?? "arobotsandbox.asuscomm.com"
+            let url = "smb://\(self.uiSearchBar.text):139"
+            seg?.smbURL = url ?? "smb://arobotsandbox.asuscomm.com:139"
             
         }
-        
+    
         if segue.identifier == "HrefSoup"  {
             let seg = segue.destination as? HrefSoup
-            let url = self.uiSearchBar.text
-            seg?.soupURL = url ?? "arobotsandbox.asuscomm.com"
+            let url = "https://\(String(describing: self.uiSearchBar.text))"
+            seg?.soupURL = url 
+           // seg?.performSegue(withIdentifier: url!, sender: self)
             
         }
         
@@ -300,20 +245,6 @@ extension DownloaderVC: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
-
-extension notificationError {
-    public var notificationErrDescriotion : String {
-        switch self {
-        case .passNotificationErr : return "[-] caught error in notification, please edit"
-        case . fetchSoupErr : return "[-] caught error in populating soup Array "
-        }
-    }
-}
-extension Notification.Name {
-    public static let downloadURL = Notification.Name("downloadURL")
-    public static let soupHref = Notification.Name("soupHref")
-    public static let soupPtags = Notification.Name("soupPtags")
-}
 
 
 

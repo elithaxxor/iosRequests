@@ -10,6 +10,10 @@ import WebKit
 
 class SmbView: ViewControllerLogger {
     let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
+    
+    
+    @IBOutlet weak var smbTextField: UITextView!
+    
 
  
     @IBOutlet weak var smbWeb : WKWebView? {
@@ -32,23 +36,25 @@ class SmbView: ViewControllerLogger {
     override func viewDidLoad() {
         super.viewDidLoad()
         let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
-        let request =  URLRequest(url: (backupURL))
-        smbWeb?.load(request)
-    
+        let backupURLString = "smb://arobotsandbox.asuscomm.com:445"
+        let url = URL(string: searchBar.text ?? backupURLString)
+        
+        smbTextField.text = url?.description
+        smbWeb?.load(URLRequest(url: url ?? backupURL))
         print("[!] View Did Load- Passed \(smbURL)")
-
+        
+        
         
     }
-    
     
     
     private func parseUIView(_ uiView: WKWebView) {
         let url = smbURL.description
         let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
 
-        let requestURL = URLRequest(url: URL(string: url ?? backupURL.description)!)
+        let requestURL = URLRequest(url: URL(string: url ) ?? backupURL)
         print("[!] Starting Request on \(requestURL)")
-        uiView.load(requestURL)
+        smbWeb?.load(requestURL)
     }
     
 
