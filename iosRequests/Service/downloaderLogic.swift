@@ -10,7 +10,7 @@ import UIKit
 import SwiftSoup
 
 
-class downloaderLogic: NSObject {
+internal class downloaderLogic: NSObject {
     public var url: String = "" {
         didSet {
             print("[!] Downloader Logic URL set to \(url.description)")

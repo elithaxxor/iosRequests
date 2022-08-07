@@ -9,6 +9,9 @@ import Foundation
 import UIKit
 import SwiftSoup
 
+// TODO: Add beaituflsoup list to subscriber (use async background)
+// MARK: Test String https://www.tvseries.watch/series/the-simpsons
+
 @IBDesignable class HrefSoup: ViewControllerLogger
 {
     public var soupLinks : [Element] = [Element]()
@@ -83,35 +86,22 @@ import SwiftSoup
         DispatchQueue.main.async {
             [weak self] in
             print("[!] Laying out [TABLE CELL VIEWS] ")
-            
-            
-            //  let idx = 0
-            // let idxPath = IndexPath(row: idx, section: 0)
-            // self?.tableView?.insertRows(at: [idxPath], with: .left)
             self?.tableView?.isHidden = false
-            //            self?.tableView?.addSubview(UITableView())
-            //            self?.tableView?.addSubview((self?.tableView)!)
             self?.tableView?.layoutSubviews()
             self?.tableView?.isSpringLoaded = true
             self?.tableView?.reloadData()
         }
-        
-        
+        print("[+] Table View Cells Are Set. ")
     }
     
     @objc func didUpdateSoupNoticationHREF(_ notification: Notification) throws {
         guard let soupArray: Array = notification.object as? [Element] else { throw notificationError.fetchSoupErr}
         print("[+] Soup Array \(soupArray)")
-        // soupLinks = soupArray.self
-        // performDisplayHrefSegue() --> ** May run twice, as href and ptags are sent over.
         
     }
     @objc func didUpdateSoupNoticationPTAG(_ notification: Notification) throws {
         guard let soupArray: Array = notification.object as? [Element] else { throw notificationError.fetchSoupErr}
         print("[+] Soup Array \(soupArray)")
-        //  soupLinks = soupArray.self
-        // performDisplayHrefSegue() --> ** May run twice, as href and ptags are sent over.
-        
     }
     
     
@@ -119,26 +109,20 @@ import SwiftSoup
         print("[!] Prasing HTML to String.. \(String(describing: textViewData))")
         
         let myURLString = urlParser.url
-        // if let myURLString =  textViewData?.description { // ?? "https://www.tvseries.watch/series/the-simpsons"
         guard let myURL = URL(string: myURLString) else {
             print("Error: \(myURLString) doesn't seem to be a valid URL")
             return myURLString
         }
-        //  handleHTTPSoup(textViewData: myURLString)
         
         print("[!][!] \(myURL)")
-        
         do {
             let myHTMLString = try String(contentsOf: myURL, encoding: .ascii)
             print("HTML : \(myHTMLString)")
             return myHTMLString
-            
         } catch let error {
             print("Error: \(error)")
-            
         }
         return "https://www.tvseries.watch/series/the-simpsons"
-        
     }
     
     fileprivate func handleHTTPSoup(textViewData: String?){
@@ -146,7 +130,6 @@ import SwiftSoup
         do {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 group.enter()
-                
                 print("[!][!] BACKGROUND THREAD INITIATED [!][!] ")
                 let html = textViewData!
                 let doc: Document = try! SwiftSoup.parse(html)
@@ -171,13 +154,8 @@ import SwiftSoup
                 let hrefCount = buildCells.build.setCountHREF(newCount: ahrefCount)
                 let ptagCount = buildCells.build.setCountPTAG(newCount: ptagCount)
                 
-                print("[!] Set HREF tags to : \(hrefCount)")
-                print("[!] Set PTAG tags to : \(ptagCount)")
-                print("*****************")
-                print("SOUPLINKS")
-                
-                print(self?.soupLinks)
-                
+                print("[!] Set HREF tags to : \(hrefCount)"); print("[!] Set PTAG tags to : \(ptagCount)")
+                print("*****************"); print("SOUPLINKS"); print(self?.soupLinks)
                 self?.tableView?.reloadData()
                 print("[!][!] BACKGROUND THREAD ENDED [!][!] ")
                 group.leave()
@@ -194,9 +172,7 @@ import SwiftSoup
             
             
         } catch Exception.Error(type: let type, Message: let msg) {
-            print("[!] Error \(msg)")
-            print("[!] type \(type)")
-            print(LocalizedError.self)
+            print("[!] Error \(msg)"); print("[!] type \(type)"); print(LocalizedError.self)
         }
     }
     
@@ -229,9 +205,6 @@ extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
     }
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("[!] Table View is returning \(soupLinks.count)")
-        // TODO: GET Count
-        
-        //  let numberOfRowsInSection = buildCells.cellCountHREF
         let numberOfRowsInSection = soupLinks.count
         print("numberOfRowsInSection \(String(describing: numberOfRowsInSection))")
         return numberOfRowsInSection ?? 2

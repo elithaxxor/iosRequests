@@ -12,6 +12,7 @@ import SwiftSoup
 
 @IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
     
+    public var soupLinks : [Element] = [Element]()
     static let down = DownloaderVC()
     private var dl = downloaderLogic()
     private let cellid = "cellid"
@@ -88,8 +89,6 @@ import SwiftSoup
     }
     @IBAction func httpSoupBtn(_ sender: UIButton) {
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased()
-        performDisplayHrefTableView()
-        
         if fetchURL.hasPrefix("http://") {
             print("download url requires TLS \(fetchURL)")
             var downloadAlert = UIAlertController(title: "add https://", message: "tls required, add https://", preferredStyle: .alert)
@@ -102,8 +101,7 @@ import SwiftSoup
         }
         
         print("[HTTP-Soup] Btn Pressed \n \(fetchURL) ")
-
-        
+        performDisplayHrefTableView()
     }
     @IBAction func httpDwnBtn(_ sender: UIButton) {
         print("[HTTP-DWNLD] Btn Pressed ")
@@ -133,8 +131,6 @@ import SwiftSoup
     }
     
     
-    public var soupLinks : [Element] = [Element]()
-    // TODO: Setup perform segue for after the sou list populates
     private func performDisplayHrefTableView() {
         print("[!] Performing segue")
         performSegue(withIdentifier: "HrefSoup", sender: self)
@@ -148,17 +144,9 @@ import SwiftSoup
         try?dl.setSession()
         
     }
-    
-    
-    // TODO: Add method to populate soupNotification views.
-    // TODO: ADD UICellViewTble to populate soup notifications
-    // use souplinks to poulate cells
-    
-    // TODO: Add beaituflsoup list to subscriber (use async background)
     private func printHrefSoupList(ahref: [Element] , count: Int, ptag: [Element]) {
         print("[+] Parsing users Soup Reqeust --> Displaying available downloads")
         print(".. \(count) \(ahref) \(ptag)")
-        
     }
     
     
@@ -167,12 +155,7 @@ import SwiftSoup
     override func viewDidLoad() {
         super.viewDidLoad()
         progressBar?.progress = 0
-        
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateNotification), name: .downloadURL , object: nil)
-
-        // TODO: BUG AREA
-        
-        
         // try?dl.setSession()
     }
     

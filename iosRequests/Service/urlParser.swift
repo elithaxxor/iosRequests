@@ -7,7 +7,7 @@
 
 import Foundation
 
-class urlParser {
+internal class urlParser {
     
     static var fetch = urlParser()
     static var url = "https://kimcartoon.li/Cartoon/The-Simpsons-Season-33"

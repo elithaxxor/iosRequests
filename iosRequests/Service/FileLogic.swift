@@ -10,7 +10,7 @@ import UIKit
 
 
 
-class FileLogic {
+internal class FileLogic {
     static var work = FileLogic()
     fileprivate static let ImageName : String? = "test_image00"
     fileprivate(set) var imageName : String? = nil

@@ -9,7 +9,7 @@ import UIKit
 import WebKit
 
 @IBDesignable
-class SmbView: ViewControllerLogger {
+internal class SmbView: ViewControllerLogger {
     
     fileprivate let parseUrl = urlParser.url.lowercased()
     
@@ -63,7 +63,7 @@ class SmbView: ViewControllerLogger {
         print("[!] View Did Load- Passed \(smbURL)")
     }
     override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()        
+        super.viewWillLayoutSubviews()
         view.addSubview(smbWeb!)
     }
     

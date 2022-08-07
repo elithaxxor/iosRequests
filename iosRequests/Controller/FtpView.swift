@@ -8,7 +8,7 @@
 import WebKit
 import UIKit
 
-class  FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
+internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
 {
     
     private static var check = FtpView()
