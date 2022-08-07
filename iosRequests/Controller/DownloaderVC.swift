@@ -84,20 +84,21 @@ import SwiftSoup
     }
     @IBAction func httpSoupBtn(_ sender: UIButton) {
         print("[HTTP-Soup] Btn Pressed ")
-        let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
+        let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased()
         performDisplayHrefTableView()
     }
     @IBAction func httpDwnBtn(_ sender: UIButton) {
         print("[HTTP-DWNLD] Btn Pressed ")
         let backupDownURL = "https://www.google.com"
-        let downlUrl = urlParser.url
+        let downlUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
+        print(downlUrl)
         handleHttpDwn(textViewData: downlUrl)
     }
     
     internal func handleHttpDwn(textViewData: String) {
         print("[!] [textview URL] \(dl.url)")
         print("[!] [download URL] \(textViewData)")
-        
+        dl.url = textViewData
         try? dl.setSession()
     }
     

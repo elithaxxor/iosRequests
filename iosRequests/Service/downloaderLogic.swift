@@ -11,8 +11,9 @@ import SwiftSoup
 
 
 class downloaderLogic: NSObject {
-    fileprivate(set) var url: String = "" {
+    public var url: String = "" {
         didSet {
+            print("[!] Downloader Logic URL set to \(url.description)")
             try?setSession()
         }
     }
