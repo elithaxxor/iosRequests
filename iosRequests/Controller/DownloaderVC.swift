@@ -3,17 +3,12 @@
 //  DownloadManagerIII
 //
 //  Created by Adel Al-Aali on 6/19/22.
-//
+// ftp://arobotsandbox.asuscomm.com
+
 
 import UIKit
 import Foundation
 import SwiftSoup
-
-// TODO --> Create Local Notiifcatino Center for login detols
-
-
-// ftp://arobotsandbox.asuscomm.com
-
 
 @IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
     
@@ -60,7 +55,10 @@ import SwiftSoup
         didSet {
             let text = uiSearchBar?.text?.lowercased()
             print("[!] UI SearchBar Text \(String(describing: text))")
+            print(text)
             urlParser.fetch.changeUrl(newLink: text)
+            print(urlParser.fetch.getUrl())
+            print("[+] New Url After Searchbar Change,\n \(urlParser.url.description)")
         }
     }
     
@@ -91,11 +89,15 @@ import SwiftSoup
     }
     @IBAction func httpDwnBtn(_ sender: UIButton) {
         print("[HTTP-DWNLD] Btn Pressed ")
-        handleHttpDwn(textViewData: uiSearchBar?.text)
+        let backupDownURL = "https://www.google.com"
+        let downlUrl = urlParser.url
+        handleHttpDwn(textViewData: downlUrl)
     }
     
-    func handleHttpDwn(textViewData: String?) {
-        guard dl.url == textViewData else { return }
+    internal func handleHttpDwn(textViewData: String) {
+        print("[!] [textview URL] \(dl.url)")
+        print("[!] [download URL] \(textViewData)")
+        
         try? dl.setSession()
     }
     

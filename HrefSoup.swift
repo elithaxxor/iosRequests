@@ -9,15 +9,11 @@ import Foundation
 import UIKit
 import SwiftSoup
 
-
-
-@IBDesignable
-class HrefSoup: ViewControllerLogger
+@IBDesignable class HrefSoup: ViewControllerLogger
 {
     public var soupLinks : [Element] = [Element]()
     fileprivate let urlTableViewCell = UrlTableViewCell()
     fileprivate var searchBarResults: [Element]?
-    
     
     @IBInspectable var soupURL: String = ""
     @IBOutlet weak var tableView: UITableView!
@@ -33,29 +29,20 @@ class HrefSoup: ViewControllerLogger
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let group = DispatchGroup()
         tableView?.delegate = self
         tableView?.dataSource = self
         searchBar?.delegate = self
-        let group = DispatchGroup()
         searchBarResults = soupLinks
-        // DispatchQueue.main.async { [weak self ] in
         group.enter()
         NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationHREF), name: .soupHref, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationPTAG), name: .soupPtags, object: nil)
         
         self.parseInfo()
-        //  group.leave()
-        // }
-        //  group.wait()
-        // DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-        //  group.enter()
         var hmtlString = self.getHTML(textViewData: self.soupURL)
         hmtlString = "\(String(describing: hmtlString))"
         print("HTML String [background thread] \(String(describing: hmtlString))")
         self.handleHTTPSoup(textViewData: hmtlString)
-        //  group.leave()
-        //  }
-        // group.wait()
         DispatchQueue.main.async {
             [weak self] in
             group.enter()

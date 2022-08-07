@@ -11,14 +11,14 @@ class urlParser {
     
     static var fetch = urlParser()
     static var url = "https://kimcartoon.li/Cartoon/The-Simpsons-Season-33"
-    private func getUrl() -> String {
+    public func getUrl() -> String {
         print("[!] Passing Url.. \(urlParser.url)")
         return urlParser.url
     }
-    func changeUrl(newLink: String?) -> String {
+    public func changeUrl(newLink: String?) -> String {
             urlParser.self.url = newLink ?? urlParser.url
             print("[!] Changing URL00 \(String(describing: changeUrl))")
-            print("[!] Changing URL01 \(urlParser.url.description)")
+            print("[!] Changing URL01 \(urlParser.url)")
             
             
             var returnText = urlParser.url.description

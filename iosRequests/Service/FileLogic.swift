@@ -12,7 +12,7 @@ import UIKit
 
 class FileLogic {
     static var work = FileLogic()
-    static let ImageName : String? = "test_image00"
+    fileprivate static let ImageName : String? = "test_image00"
     fileprivate(set) var imageName : String? = nil
     @Published var image: UIImage? = nil
    // static let instance = FileManagerLogic()

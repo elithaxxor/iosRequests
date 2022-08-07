@@ -10,13 +10,13 @@ import UIKit
 
 class  FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
 {
-
-    static var check = FtpView()
+    
+    private static var check = FtpView()
     private var dl = downloaderLogic()
     
-    let backupURL = URL(string: "ftp://arobotsandbox.asuscomm.com:21")!
-    let backupURLString: String  = "ftp://arobotsandbox.asuscomm.com:21"
-
+    private let backupURL = URL(string: "ftp://arobotsandbox.asuscomm.com:21")!
+    private let backupURLString: String  = "ftp://arobotsandbox.asuscomm.com:21"
+    
     @IBOutlet weak var FtpTextField: UITextView!
     @IBOutlet weak var FtpSearchField: UISearchBar!
     @IBAction func FtpSearchField(sender: UISearchBar) {
@@ -35,24 +35,21 @@ class  FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
     }
     
     
+    @IBOutlet weak var searchBar: UISearchBar!
+
     private func parseUIView(_ uiView: WKWebView) {
         let url = ftpURL.description
-        let requestURL = URLRequest(url: URL(string: url ?? self.backupURLString)!)
+        let requestURL = URLRequest(url: URL(string: url )!)
         print("[!] Starting Request on \(requestURL)")
         ftpWeb?.load(requestURL)
     }
     
     
-    
-    
-    @IBOutlet weak var searchBar: UISearchBar!
     var ftpURL: String = "" {
         didSet {
             print("ftp url set")
-            
         }
     }
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,17 +57,23 @@ class  FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
         
         let url = URL(string: self.ftpURL )
         let request =  URLRequest(url: url!)
-        
+        let configuration = WKWebViewConfiguration()
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+
         FtpTextField?.text = url?.absoluteString
         //FtpTextField?.text = request.description
         ftpWeb!.load(request)
+        parseUIView(webView)
+        
     }
     
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        ftpWeb?.reload()
+    }
     
     // TODO: On User Press -- Initiate download session:
     private func startSession() {
         try? dl.setSession()
     }
-    
-    
 }
