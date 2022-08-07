@@ -272,10 +272,19 @@ extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
 
 extension HrefSoup: UISearchBarDelegate {
     internal func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        searchBarResults = []
-        for result in searchBarResults ?? []  {
-            if result != nil {
-                searchBarResults?.append(result)
+        DispatchQueue.global(qos: .userInitiated).async {
+            [weak self] in
+            var searchBarResultsArr = [String]()
+            self?.searchBarResults = []
+            for result in self?.searchBarResults ?? []  {
+                if result != nil {
+                    var filteredResults = try? result.getElementsContainingText("<a href=")
+                    self?.searchBarResults?.insert(contentsOf: filteredResults!, at: 0)
+                }
+            }
+            DispatchQueue.main.async {
+                [weak self] in
+                self?.tableView.reloadData()
             }
         }
     }
