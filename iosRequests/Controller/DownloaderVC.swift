@@ -51,7 +51,7 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     
     @IBAction func openCameraButton(sender: AnyObject) {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
-            var imagePicker = UIImagePickerController()
+            let imagePicker = UIImagePickerController()
             imagePicker.delegate = self
             imagePicker.sourceType = .camera;
             imagePicker.allowsEditing = false
@@ -66,7 +66,7 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         
         didSet {
             let text = uiSearchBar?.text?.lowercased()
-            print("[!] UI SearchBar Text \(text)")
+            print("[!] UI SearchBar Text \(String(describing: text))")
             urlParser.fetch.changeUrl(newLink: text)
         }
     }
@@ -200,7 +200,7 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
         
         if segue.identifier == "SmbView"  {
             let seg = segue.destination as? SmbView
-            let url = "smb://\(self.uiSearchBar.text):139"
+            let url = "smb://\(String(describing: self.uiSearchBar.text)):139"
             seg?.smbURL = url ?? "smb://arobotsandbox.asuscomm.com:139"
             
         }

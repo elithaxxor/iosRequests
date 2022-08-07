@@ -15,9 +15,6 @@ class buildCells {
     static var build = buildCells()
     static var cellCountHREF: Int?
     static var cellCountPTAG: Int?
-    
-
-    
     fileprivate func getCountHREF() -> Int {
         let currentCount = buildCells.cellCountHREF
         print("[[HREF] -> Cell Count] --> \(String(describing: currentCount))")
@@ -48,6 +45,7 @@ class buildCells {
 class HrefSoup: ViewControllerLogger
 {
     public var soupLinks : [Element] = [Element]()
+    fileprivate let urlTableViewCell = UrlTableViewCell()
     
     @IBInspectable var soupURL: String = ""
     @IBOutlet weak var tableView: UITableView!
@@ -58,9 +56,7 @@ class HrefSoup: ViewControllerLogger
     }
     @IBAction func searchBar(sender: UISearchBar!) {
         print("Search Bar Initiated. ")
-        
     }
-    
     
     
     override func viewDidLoad() {
@@ -69,12 +65,37 @@ class HrefSoup: ViewControllerLogger
         tableView?.dataSource = self
 
         let group = DispatchGroup()
-        DispatchQueue.main.async { [weak self ] in
-            group.enter()
-            NotificationCenter.default.addObserver(self, selector: #selector(self?.didUpdateSoupNoticationHREF), name: .soupHref, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(self?.didUpdateSoupNoticationPTAG), name: .soupPtags, object: nil)
+       // DispatchQueue.main.async { [weak self ] in
+           group.enter()
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationHREF), name: .soupHref, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationPTAG), name: .soupPtags, object: nil)
             
-            print("[!] View Did Load- Passed \(self?.soupURL)")
+        self.parseInfo()
+          //  group.leave()
+        // }
+       //  group.wait()
+       // DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+          //  group.enter()
+        var hmtlString = self.getHTML(textViewData: self.soupURL)
+            hmtlString = "\(String(describing: hmtlString))"
+            print("HTML String [background thread] \(String(describing: hmtlString))")
+        self.handleHTTPSoup(textViewData: hmtlString)
+          //  group.leave()
+      //  }
+       // group.wait()
+        DispatchQueue.main.async {
+            [weak self] in
+            group.enter()
+            self?.tableView.reloadData()
+            group.leave()
+        }
+    }
+    
+    private func parseInfo () {
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            [weak self] in
+            print("[!] View Did Load- Passed \(String(describing: self?.soupURL))")
             let url = urlParser.url
             self?.textView?.text = url
             print(self?.soupURL)
@@ -83,22 +104,14 @@ class HrefSoup: ViewControllerLogger
             
             self?.textView?.text = self?.soupURL.description
             self?.searchBar?.text = self?.soupURL
-            group.leave()
-            
-            var hmtlString = self?.getHTML(textViewData: self?.soupURL)
+            let hmtlString = self?.getHTML(textViewData: self?.soupURL)
             self?.handleHTTPSoup(textViewData: hmtlString)
         }
-        group.wait()
-        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            group.enter()
-            var hmtlString = self?.getHTML(textViewData: self?.soupURL)
-            hmtlString = "\(String(describing: hmtlString))"
-            print("HTML String [background thread] \(hmtlString)")
-            self?.handleHTTPSoup(textViewData: hmtlString)
-            self?.tableView.reloadData()
-            group.leave()
-        }
-        
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.setupViews()
     }
     
     
@@ -112,16 +125,15 @@ class HrefSoup: ViewControllerLogger
             print("[!] Laying out [TABLE CELL VIEWS] ")
     
             
-            let idx = 0
-            let idxPath = IndexPath(row: idx, section: 0)
-            self?.tableView?.insertRows(at: [idxPath], with: .left)
+          //  let idx = 0
+           // let idxPath = IndexPath(row: idx, section: 0)
+           // self?.tableView?.insertRows(at: [idxPath], with: .left)
             self?.tableView?.isHidden = false
 //            self?.tableView?.addSubview(UITableView())
 //            self?.tableView?.addSubview((self?.tableView)!)
             self?.tableView?.layoutSubviews()
             self?.tableView?.isSpringLoaded = true
             self?.tableView?.reloadData()
-
         }
 
         
@@ -144,7 +156,7 @@ class HrefSoup: ViewControllerLogger
     
     
     fileprivate func getHTML(textViewData: String?) -> String {
-        print("[!] Prasing HTML to String.. \(textViewData)")
+        print("[!] Prasing HTML to String.. \(String(describing: textViewData))")
         
         let myURLString = urlParser.url
         // if let myURLString =  textViewData?.description { // ?? "https://www.tvseries.watch/series/the-simpsons"
@@ -193,7 +205,8 @@ class HrefSoup: ViewControllerLogger
                 let ahrefArr = ["userInfo": [ahref]]
                 let ptagArr = ["userInfo": [ptag]]
                 
-                self?.soupLinks = ahref
+                //self?.soupLinks = ahref
+                self?.soupLinks.append(contentsOf: ahref)
                 
                 let hrefCount = buildCells.build.setCountHREF(newCount: ahrefCount)
                 let ptagCount = buildCells.build.setCountPTAG(newCount: ptagCount)
@@ -223,6 +236,7 @@ class HrefSoup: ViewControllerLogger
         } catch Exception.Error(type: let type, Message: let msg) {
             print("[!] Error \(msg)")
             print("[!] type \(type)")
+            print(LocalizedError.self)
         }
     }
     
@@ -232,7 +246,7 @@ extension notificationError {
     public var notificationErrDescriotion : String {
         switch self {
         case .passNotificationErr : return "[-] caught error in notification, please edit"
-        case . fetchSoupErr : return "[-] caught error in populating soup Array "
+        case .fetchSoupErr : return "[-] caught error in populating soup Array "
         }
     }
 }
@@ -248,10 +262,11 @@ extension Notification.Name {
 extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
     
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellid", for: indexPath)
+        var cell = tableView.dequeueReusableCell(withIdentifier: "cellid", for: indexPath)
 
         let idx = soupLinks[indexPath.row]
         print(idx.data())
+        
         
         cell.backgroundColor = .gray
         cell.textLabel?.text = idx.description
@@ -261,18 +276,20 @@ extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
     internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print("[!] Table View is returning \(soupLinks.count)")
         // TODO: GET Count
-        let numberOfRowsInSection = buildCells.cellCountHREF
-        print("numberOfRowsInSection \(numberOfRowsInSection)")
+        
+      //  let numberOfRowsInSection = buildCells.cellCountHREF
+        let numberOfRowsInSection = soupLinks.count
+        print("numberOfRowsInSection \(String(describing: numberOfRowsInSection))")
         return numberOfRowsInSection ?? 2
     }
-    internal func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        print("[!] Table View For Editing! ")
-        return true
-    }
+//    internal func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+//        print("[!] Table View For Editing! ")
+//        return true
+//    }
     
     internal func numberOfSections(in tableView: UITableView) -> Int {
         let numbersInSection = buildCells.cellCountHREF
-        print("[!] Table View For # of sections! [\(numbersInSection)]")
+        print("[!] Table View For # of sections! [\(String(describing: numbersInSection))]")
         return numbersInSection ?? 2 
     }
     
