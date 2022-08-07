@@ -62,6 +62,10 @@ class SmbView: ViewControllerLogger {
         }
         print("[!] View Did Load- Passed \(smbURL)")
     }
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()        
+        view.addSubview(smbWeb!)
+    }
     
     
     

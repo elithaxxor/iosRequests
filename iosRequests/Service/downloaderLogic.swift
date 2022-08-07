@@ -28,18 +28,22 @@ class downloaderLogic: NSObject {
         
         var session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
         URLSession.shared.downloadTask(with: sessionURL).resume()
+        print("Performed URL Grab on \(sessionURL.absoluteURL)")
     }
+    
 }
 extension downloaderLogic: URLSessionDownloadDelegate {
     
     // TODO: Save data to local storage.
     internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        print("[!] Starting URL Session")
+        print("[!] Starting URL Delegate Session")
         guard let data = try? Data(contentsOf: location) else {
             print("[-] Data Could Not Be Parsed. ")
             return
         }
+        print("******************************************** \n [DATA] \n \n ")
         print(data)
+        print("******************************************** \n [DATA] \n \n ")
         DispatchQueue.main.async { [weak self] in
             FileLogic.work.saveData(data: data, name: location.description)
             DownloaderVC.down.progressLbl.isHidden = true

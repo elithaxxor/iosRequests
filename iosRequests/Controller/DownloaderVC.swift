@@ -54,11 +54,15 @@ import SwiftSoup
     @IBOutlet weak var uiSearchBar: UISearchBar! {
         didSet {
             let text = uiSearchBar?.text?.lowercased()
-            print("[!] UI SearchBar Text \(String(describing: text))")
+            let newUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
+            if newUrl.isEmpty || newUrl.hasPrefix("http://") {
+                var dialogMessage = UIAlertController(title: "Attention", message: "tls required, add https", preferredStyle: .alert)
+            }
+            print("[!] UI SearchBar Text \(newUrl))")
             print(text)
             urlParser.fetch.changeUrl(newLink: text)
             print(urlParser.fetch.getUrl())
-            print("[+] New Url After Searchbar Change,\n \(urlParser.url.description)")
+            print("[+] New Url After Searchbar Change,\n \(newUrl)")
         }
     }
     
@@ -91,7 +95,14 @@ import SwiftSoup
         print("[HTTP-DWNLD] Btn Pressed ")
         let backupDownURL = "https://www.google.com"
         let downlUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
-        print(downlUrl)
+        
+        if downlUrl.isEmpty || downlUrl.hasPrefix("http://") {
+            print("download url requires TLS \(downlUrl)")
+            var downloadAlert = UIAlertController(title: "add https://", message: "tls required, add https://", preferredStyle: .alert)
+            self.present(downloadAlert, animated: true, completion: nil)
+        }
+        
+        print("[Download Url Being Parsed \(downlUrl)")
         handleHttpDwn(textViewData: downlUrl)
     }
     
