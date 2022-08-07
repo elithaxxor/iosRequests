@@ -276,14 +276,21 @@ extension HrefSoup: UISearchBarDelegate {
             [weak self] in
             var searchBarResultsArr = [String]()
             self?.searchBarResults = []
-            for result in self?.searchBarResults ?? []  {
+            
+            if searchText == "" {
+                self?.searchBarResults = self?.soupLinks
+            }
+            for result in self?.soupLinks ?? []  {
                 if result != nil {
                     var filteredResults = try? result.getElementsContainingText("<a href=")
                     self?.searchBarResults?.insert(contentsOf: filteredResults!, at: 0)
+                    print("[!] SearchBar Non Filtered Results \n \(result)")
+                    print("[+] SearchBar Filtered Results \n \(filteredResults)")
                 }
             }
             DispatchQueue.main.async {
                 [weak self] in
+                print("[!] Reloading TableView after SearchResults")
                 self?.tableView.reloadData()
             }
         }
