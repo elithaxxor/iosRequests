@@ -38,24 +38,24 @@ class HrefSoup: ViewControllerLogger
         searchBar?.delegate = self
         let group = DispatchGroup()
         searchBarResults = soupLinks
-       // DispatchQueue.main.async { [weak self ] in
-           group.enter()
+        // DispatchQueue.main.async { [weak self ] in
+        group.enter()
         NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationHREF), name: .soupHref, object: nil)
-            NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationPTAG), name: .soupPtags, object: nil)
-            
+        NotificationCenter.default.addObserver(self, selector: #selector(self.didUpdateSoupNoticationPTAG), name: .soupPtags, object: nil)
+        
         self.parseInfo()
-          //  group.leave()
+        //  group.leave()
         // }
-       //  group.wait()
-       // DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-          //  group.enter()
+        //  group.wait()
+        // DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+        //  group.enter()
         var hmtlString = self.getHTML(textViewData: self.soupURL)
-            hmtlString = "\(String(describing: hmtlString))"
-            print("HTML String [background thread] \(String(describing: hmtlString))")
+        hmtlString = "\(String(describing: hmtlString))"
+        print("HTML String [background thread] \(String(describing: hmtlString))")
         self.handleHTTPSoup(textViewData: hmtlString)
-          //  group.leave()
-      //  }
-       // group.wait()
+        //  group.leave()
+        //  }
+        // group.wait()
         DispatchQueue.main.async {
             [weak self] in
             group.enter()
@@ -96,33 +96,33 @@ class HrefSoup: ViewControllerLogger
         DispatchQueue.main.async {
             [weak self] in
             print("[!] Laying out [TABLE CELL VIEWS] ")
-    
             
-          //  let idx = 0
-           // let idxPath = IndexPath(row: idx, section: 0)
-           // self?.tableView?.insertRows(at: [idxPath], with: .left)
+            
+            //  let idx = 0
+            // let idxPath = IndexPath(row: idx, section: 0)
+            // self?.tableView?.insertRows(at: [idxPath], with: .left)
             self?.tableView?.isHidden = false
-//            self?.tableView?.addSubview(UITableView())
-//            self?.tableView?.addSubview((self?.tableView)!)
+            //            self?.tableView?.addSubview(UITableView())
+            //            self?.tableView?.addSubview((self?.tableView)!)
             self?.tableView?.layoutSubviews()
             self?.tableView?.isSpringLoaded = true
             self?.tableView?.reloadData()
         }
-
+        
         
     }
     
     @objc func didUpdateSoupNoticationHREF(_ notification: Notification) throws {
         guard let soupArray: Array = notification.object as? [Element] else { throw notificationError.fetchSoupErr}
         print("[+] Soup Array \(soupArray)")
-       // soupLinks = soupArray.self
+        // soupLinks = soupArray.self
         // performDisplayHrefSegue() --> ** May run twice, as href and ptags are sent over.
         
     }
     @objc func didUpdateSoupNoticationPTAG(_ notification: Notification) throws {
         guard let soupArray: Array = notification.object as? [Element] else { throw notificationError.fetchSoupErr}
         print("[+] Soup Array \(soupArray)")
-      //  soupLinks = soupArray.self
+        //  soupLinks = soupArray.self
         // performDisplayHrefSegue() --> ** May run twice, as href and ptags are sent over.
         
     }
@@ -159,7 +159,7 @@ class HrefSoup: ViewControllerLogger
         do {
             DispatchQueue.global(qos: .userInitiated).async { [weak self] in
                 group.enter()
-
+                
                 print("[!][!] BACKGROUND THREAD INITIATED [!][!] ")
                 let html = textViewData!
                 let doc: Document = try! SwiftSoup.parse(html)
@@ -188,9 +188,9 @@ class HrefSoup: ViewControllerLogger
                 print("[!] Set PTAG tags to : \(ptagCount)")
                 print("*****************")
                 print("SOUPLINKS")
-
+                
                 print(self?.soupLinks)
-
+                
                 self?.tableView?.reloadData()
                 print("[!][!] BACKGROUND THREAD ENDED [!][!] ")
                 group.leave()
@@ -232,7 +232,7 @@ extension Notification.Name {
 extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
     internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "cellid", for: indexPath)
-
+        
         let idx = soupLinks[indexPath.row]
         print(idx.data())
         cell.backgroundColor = .gray
@@ -244,22 +244,30 @@ extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
         print("[!] Table View is returning \(soupLinks.count)")
         // TODO: GET Count
         
-      //  let numberOfRowsInSection = buildCells.cellCountHREF
+        //  let numberOfRowsInSection = buildCells.cellCountHREF
         let numberOfRowsInSection = soupLinks.count
         print("numberOfRowsInSection \(String(describing: numberOfRowsInSection))")
         return numberOfRowsInSection ?? 2
+    }
+    
+    
+    internal func numberOfSections(in tableView: UITableView) -> Int {
+        let numbersInSection = buildCells.cellCountHREF
+        print("[!] Table View For # of sections! [\(String(describing: numbersInSection))]")
+        return numbersInSection ?? 2
     }
     internal func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         print("[!] Table View For Editing! ")
         return true
     }
-    
-    internal func numberOfSections(in tableView: UITableView) -> Int {
-        let numbersInSection = buildCells.cellCountHREF
-        print("[!] Table View For # of sections! [\(String(describing: numbersInSection))]")
-        return numbersInSection ?? 2 
+    internal func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> [UITableViewRowAction] {
+        
+        let deleteAction = UITableViewRowAction(style: .destructive, title: "delete") { [weak self] action, indexpPath in
+            self?.soupLinks.remove(at: indexPath.row)
+            self?.tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+        return [deleteAction]
     }
-    
 }
 
 extension HrefSoup: UISearchBarDelegate {
