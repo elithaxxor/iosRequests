@@ -15,25 +15,22 @@ import SwiftSoup
 // ftp://arobotsandbox.asuscomm.com
 
 
-@IBDesignable
-class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
-    var dl = downloaderLogic()
+@IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
+    
     static let down = DownloaderVC()
-    let cellid = "cellid"
-    @IBOutlet weak var tableView: UITableView!
+    private var dl = downloaderLogic()
+    private let cellid = "cellid"
     
-    
-    
-    var IP: String = ""
-    var USER: String = ""
-    var PORT: String = ""
-    
+    internal var IP: String = ""
+    internal var USER: String = ""
+    internal var PORT: String = ""
+    fileprivate var imagePicker = UIImagePickerController()
+
     // TODO: Add to storyboard
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var progressBar: UIProgressView?
     @IBOutlet weak var progressLbl: UILabel!
     @IBOutlet weak var urlLbl: UILabel!
-    
-    var imagePicker = UIImagePickerController()
     
     @IBAction func openLibraryButton(sender: AnyObject) {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
@@ -43,11 +40,8 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
             imagePicker.sourceType = .photoLibrary
             present(imagePicker, animated: true, completion: nil)
             // self.present(imagePicker, animated: true, completion: nil)
-            
         }
     }
-    
-    
     
     @IBAction func openCameraButton(sender: AnyObject) {
         if UIImagePickerController.isSourceTypeAvailable(.camera) {
@@ -63,14 +57,12 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     
     
     @IBOutlet weak var uiSearchBar: UISearchBar! {
-        
         didSet {
             let text = uiSearchBar?.text?.lowercased()
             print("[!] UI SearchBar Text \(String(describing: text))")
             urlParser.fetch.changeUrl(newLink: text)
         }
     }
-    
     
     @IBAction func uploadBtn(_ sender: UIButton) {
         print("[!] User has initiated uploading button")
@@ -103,14 +95,12 @@ class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINa
     }
     
     func handleHttpDwn(textViewData: String?) {
-        
         guard dl.url == textViewData else { return }
         try? dl.setSession()
     }
     
     
     public var soupLinks : [Element] = [Element]()
-    
     // TODO: Setup perform segue for after the sou list populates
     private func performDisplayHrefTableView() {
         print("[!] Performing segue")

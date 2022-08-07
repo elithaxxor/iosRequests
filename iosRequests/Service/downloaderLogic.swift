@@ -11,13 +11,13 @@ import SwiftSoup
 
 
 class downloaderLogic: NSObject {
-    var url: String = "" {
+    fileprivate(set) var url: String = "" {
         didSet {
             try?setSession()
         }
     }
     
-    func setSession() throws {
+    internal func setSession() throws {
         print("[!] Starting Fetch on \(url)")
         let config = URLSessionConfiguration.default
         config.httpAdditionalHeaders = ["User-Agent":"Legit Safari", "Authorization" : "Bearer key1234567"]
@@ -31,9 +31,8 @@ class downloaderLogic: NSObject {
 }
 extension downloaderLogic: URLSessionDownloadDelegate {
     
-
     // TODO: Save data to local storage.
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         print("[!] Starting URL Session")
         guard let data = try? Data(contentsOf: location) else {
             print("[-] Data Could Not Be Parsed. ")
@@ -46,7 +45,7 @@ extension downloaderLogic: URLSessionDownloadDelegate {
         }
         
     }
-    func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         let progress = bytesWritten / totalBytesExpectedToWrite
         DownloaderVC.down.progressBar?.progress = Float(progress)
         DownloaderVC.down.progressLbl.text = "\(progress * 100)%"

@@ -6,23 +6,18 @@
 //
 
 import Foundation
-
-import Foundation
 import UIKit
 
 
 
 class FileLogic {
-
+    static var work = FileLogic()
     static let ImageName : String? = "test_image00"
-    let imageName : String? = nil
+    fileprivate(set) var imageName : String? = nil
     @Published var image: UIImage? = nil
    // static let instance = FileManagerLogic()
     
-    static var work = FileLogic() 
-
-
-    func saveData(data: Data, name: String)  {
+    internal func saveData(data: Data, name: String)  {
         // guard let data = image.jpegData(compressionQuality: 1.0) else { return }
 
         guard let mainDir = try? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
@@ -45,7 +40,7 @@ class FileLogic {
 
 
     // MARK: Returns imge path,
-    func getImgPath(name: String) throws -> URL? {
+    internal func getImgPath(name: String) throws -> URL? {
         print("[!] Getting Image Path for: \(name).jpg")
         guard
             let cachePath = FileManager
@@ -59,17 +54,13 @@ class FileLogic {
     }
 
     //MARK: Returns Binary data of img from parsed path, returns UIIMAGE
-    func getImg(name: String) throws -> UIImage? {
+    internal func getImg(name: String) throws -> UIImage? {
         print("[!] Getting Image from Path for: \(name).jpg")
         guard let path = try? getImgPath(name: name)?.path else { throw LocalFileErr.getImgErr }
         return UIImage(contentsOfFile: path)
     }
     
-  
-
-
-
-    func deleteImg(name: String) throws {
+    internal func deleteImg(name: String) throws {
         print("[!] Deleting Image from Path: \(name).jpg")
         guard let path = try getImgPath(name: name) else { throw LocalFileErr.deleteImgErr }
         guard let pathStr = try getImgPath(name: name)?.path else { throw LocalFileErr.deleteImgErr }
@@ -84,7 +75,7 @@ class FileLogic {
         }
     }
 
-    func createFolder() {
+    internal func createFolder() {
         guard let path = FileManager
             .default
             .urls(for: .cachesDirectory, in: .userDomainMask)
@@ -112,7 +103,6 @@ enum LocalFileErr : Error {
     case pathError
     case getImgErr
     case deleteImgErr
-
 }
 
 extension LocalFileErr {
