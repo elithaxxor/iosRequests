@@ -87,18 +87,37 @@ import SwiftSoup
         performSegue(withIdentifier: "SmbView", sender: self)
     }
     @IBAction func httpSoupBtn(_ sender: UIButton) {
-        print("[HTTP-Soup] Btn Pressed ")
         let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased()
         performDisplayHrefTableView()
+        
+        if fetchURL.hasPrefix("http://") {
+            print("download url requires TLS \(fetchURL)")
+            var downloadAlert = UIAlertController(title: "add https://", message: "tls required, add https://", preferredStyle: .alert)
+            self.present(downloadAlert, animated: true, completion: nil)
+        }
+        else if fetchURL.isEmpty {
+            print("no url entered \n \(fetchURL)")
+            var downloadAlert = UIAlertController(title: "empty link", message: "tls required, add https://www.website.com", preferredStyle: .alert)
+            self.present(downloadAlert, animated: true, completion: nil)
+        }
+        
+        print("[HTTP-Soup] Btn Pressed \n \(fetchURL) ")
+
+        
     }
     @IBAction func httpDwnBtn(_ sender: UIButton) {
         print("[HTTP-DWNLD] Btn Pressed ")
         let backupDownURL = "https://www.google.com"
-        let downlUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
+        var downlUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
         
-        if downlUrl.isEmpty || downlUrl.hasPrefix("http://") {
+        if downlUrl.hasPrefix("http://") {
             print("download url requires TLS \(downlUrl)")
             var downloadAlert = UIAlertController(title: "add https://", message: "tls required, add https://", preferredStyle: .alert)
+            self.present(downloadAlert, animated: true, completion: nil)
+        }
+        else if downlUrl.isEmpty {
+            print("no url entered \n \(downlUrl)")
+            var downloadAlert = UIAlertController(title: "empty link", message: "tls required, add https://www.website.com", preferredStyle: .alert)
             self.present(downloadAlert, animated: true, completion: nil)
         }
         
