@@ -8,13 +8,29 @@
 import Foundation
 import UIKit
 import SwiftSoup
+import Combine
+
 
 // TODO: Add beaituflsoup list to subscriber (use async background)
 // MARK: Test String https://www.tvseries.watch/series/the-simpsons
 
+//protocol Subscriber {
+//    associatedtype Input
+//    associatedtype Failure
+//
+//    func recieve(subscription: Subscription)
+//    func recieve(_ input: Input) -> Subscribers.Demand
+//    func recieve(completion: Subscribers.Completion<Failure>)
+//}
+
 @IBDesignable class HrefSoup: ViewControllerLogger
 {
     public var soupLinks : [Element] = [Element]()
+    public let name = Notification.Name("")
+    
+    public var subscriptions = Set<AnyCancellable>()
+    
+    
     fileprivate let urlTableViewCell = UrlTableViewCell()
     fileprivate var searchBarResults: [Element]?
     
@@ -29,9 +45,22 @@ import SwiftSoup
         print("Search Bar Initiated. ")
     }
     
+    public func printPublisher(of description: String,
+                               action: () -> Void) {
+        print("\n——— Example of:", description, "———")
+        action()
+    }
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        let cancellable = NotificationCenter.default
+            .publisher(for: name)
+            .sink { note in
+                print(note.userInfo!["SearchString"] as! String)
+            }
+        
         let group = DispatchGroup()
         tableView?.delegate = self
         tableView?.dataSource = self
@@ -157,9 +186,23 @@ import SwiftSoup
                 print("[!] Set HREF tags to : \(hrefCount)"); print("[!] Set PTAG tags to : \(ptagCount)")
                 print("*****************"); print("SOUPLINKS"); print(self?.soupLinks)
                 self?.tableView?.reloadData()
-                print("[!][!] BACKGROUND THREAD ENDED [!][!] ")
+               
+                let subscribedSoup = Just(self!.soupLinks)
+                    .map { (value) -> [Element] in
+                        return value
+                    }
+                    .sink { (receivedValue) in
+                        print(" ************************ \n [+] Notification Center Values \n \n  \(receivedValue) \n ******************* \n \n")
+
+                    } .store(in: &self!.subscriptions)
+                
+                print("[SUBSCRIPTIONS STORE] :: \(String(describing: self?.subscriptions.description))")
+                print("[SUBSCRIPTIONS COUNT] :: \(String(describing: self?.subscriptions.count))")
+
+                print("\n \n [!][!] BACKGROUND THREAD ENDED [!][!] ")
                 group.leave()
             }
+            
             group.wait()
             DispatchQueue.main.async { [weak self] in
                 group.enter()
@@ -169,7 +212,6 @@ import SwiftSoup
                 print("[!][!] MAIN THREAD THREAD ENDED [!][!] ")
                 group.leave()
             }
-            
             
         } catch Exception.Error(type: let type, Message: let msg) {
             print("[!] Error \(msg)"); print("[!] type \(type)"); print(LocalizedError.self)
@@ -257,32 +299,7 @@ extension HrefSoup: UISearchBarDelegate {
     }
 }
 
-class buildCells {
-    static var build = buildCells()
-    static var cellCountHREF: Int?
-    static var cellCountPTAG: Int?
-    fileprivate func getCountHREF() -> Int {
-        let currentCount = buildCells.cellCountHREF
-        print("[[HREF] -> Cell Count] --> \(String(describing: currentCount))")
-        return currentCount ?? 2
-    }
-    // TODO: pass download amount from soupmodule here
-    fileprivate func setCountHREF(newCount: Int) -> Int {
-        print("[HREF] -> Setting Count for Amt of Cells] --> \(newCount)")
-        buildCells.cellCountHREF = newCount
-        return buildCells.cellCountHREF ?? 2
-    }
-    fileprivate func getCountPTAG() -> Int {
-        let currentCount = buildCells.cellCountPTAG ?? 2
-        print("[PTAG] -> Getting Count for Amt of Cells] --> \(currentCount)")
-        return currentCount
-    }
-    fileprivate func setCountPTAG(newCount: Int) -> Int {
-        buildCells.cellCountPTAG = newCount
-        print("[PTAG] -> Setting Count for Amt of Cells] -->")
-        return buildCells.cellCountPTAG ?? 2
-    }
-}
+
 
 
 //class tableCell: UITableViewCell {
