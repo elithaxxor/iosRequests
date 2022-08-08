@@ -142,7 +142,7 @@
                                 <rect key="frame" x="117" y="582" width="150" height="4"/>
                             </progressView>
                             <searchBar contentMode="redraw" fixedFrame="YES" barStyle="black" searchBarStyle="minimal" text="" placeholder="ipv4, smb, ftp or http(s) " translatesAutoresizingMaskIntoConstraints="NO" id="xpW-gy-apI" userLabel="uiSearchBar">
-                                <rect key="frame" x="32" y="608" width="358" height="140"/>
+                                <rect key="frame" x="19" y="614" width="358" height="140"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="URL" keyboardAppearance="alert" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
                             </searchBar>
@@ -164,8 +164,8 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <accessibility key="accessibilityConfiguration">
-                                            <accessibilityTraits key="traits" link="YES" notEnabled="YES"/>
-                                            <bool key="isElement" value="NO"/>
+                                            <accessibilityTraits key="traits" link="YES" staticText="YES" updatesFrequently="YES" allowsDirectInteraction="YES"/>
+                                            <bool key="isElement" value="YES"/>
                                         </accessibility>
                                         <color key="textColor" systemColor="tintColor"/>
                                         <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="17"/>
@@ -175,6 +175,16 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.093810401856899261" green="0.63903075456619263" blue="0.19023075699806213" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </view>
+                            <label userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontForContentSizeCategory="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Lj-nm-Eze">
+                                <rect key="frame" x="289" y="574" width="57" height="40"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" staticText="YES" updatesFrequently="YES"/>
+                                </accessibility>
+                                <fontDescription key="fontDescription" name="CourierNewPSMT" family="Courier New" pointSize="12"/>
+                                <color key="textColor" red="0.093810401856899261" green="0.63903075456619263" blue="0.19023075699806213" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="labelColor"/>
@@ -205,6 +215,7 @@
                     <connections>
                         <outlet property="dlView" destination="WR8-do-Kw7" id="KVX-2U-sFu"/>
                         <outlet property="progressBar" destination="r2g-Sq-HjG" id="BO2-D8-dYO"/>
+                        <outlet property="progressLbl" destination="4Lj-nm-Eze" id="UvO-Hl-SKp"/>
                         <outlet property="textView" destination="w78-Kc-bn3" id="ZR4-JC-gpf"/>
                         <outlet property="uiSearchBar" destination="xpW-gy-apI" id="T27-UU-ckN"/>
                         <outlet property="urlTextView" destination="f2G-oU-pjW" id="UU5-4I-pB8"/>
@@ -262,6 +273,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="webView" translatesAutoresizingMaskIntoConstraints="NO" id="wsS-wf-o99">
+                                <rect key="frame" x="25" y="136" width="349" height="527"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="webView">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
+                                    <wkPreferences key="preferences"/>
+                                </wkWebViewConfiguration>
+                            </wkWebView>
                             <searchBar multipleTouchEnabled="YES" contentMode="redraw" fixedFrame="YES" barStyle="black" placeholder="find text" showsSearchResultsButton="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L2q-bT-rTa">
                                 <rect key="frame" x="4" y="663" width="390" height="56"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
@@ -273,15 +293,6 @@
                                     <string>Title</string>
                                 </scopeButtonTitles>
                             </searchBar>
-                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="webView" translatesAutoresizingMaskIntoConstraints="NO" id="wsS-wf-o99">
-                                <rect key="frame" x="21" y="44" width="349" height="619"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="webView">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="Z51-VA-8S4"/>
                         <color key="backgroundColor" systemColor="labelColor"/>

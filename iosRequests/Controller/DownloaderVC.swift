@@ -23,6 +23,7 @@ import SwiftSoup
             urlTextView?.text = IP.lowercased()
         }
     }
+    
     internal var USER: String = ""
     internal var PORT: String = ""
     fileprivate var imagePicker = UIImagePickerController()
@@ -87,10 +88,13 @@ import SwiftSoup
             }
         }
     }
+
     
-    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+    @IBAction func uiSearchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("[!] SearchBar Value Changed \n \(String(describing: searchBar.text))")
+        urlTextView?.text = searchBar.text
     }
+    
     
     @IBAction func uploadBtn(_ sender: UIButton) {
         print("[!] User has initiated uploading button")
@@ -206,7 +210,7 @@ import SwiftSoup
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("[!][!] [VIEW WILL APPEAR CALLED] ")
-        urlTextView?.text = urlParser.url.description
+        urlTextView?.text = urlParser.url
         
         if dlView != nil {
             view.addSubview(dlView!)
