@@ -64,8 +64,10 @@ internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
         super.viewDidLoad()
         print("[!] View Did Load- Passed \(ftpURL)")
         
-        let url = URL(string: ftpURL )
-        let request =  URLRequest(url: url!)
+        let url = URL(string: ftpURL)
+        let backupUrl = URL(string: "ftp://192.168.50.111:21")!
+        let backupRequest = URLRequest(url: backupUrl)
+        let request =  URLRequest(url: url ?? backupUrl)
         let configuration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: configuration)
 
@@ -95,6 +97,6 @@ internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
     
     // TODO: On User Press -- Initiate download session:
     private func startSession() {
-        try? dl.setSession()
+        try? dl.setFTPSession()
     }
 }

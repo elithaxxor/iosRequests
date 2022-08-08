@@ -9,15 +9,20 @@
 import UIKit
 import Foundation
 import SwiftSoup
-
 @IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
     
     public var soupLinks : [Element] = [Element]()
-    static let down = DownloaderVC()
+    static let shared = DownloaderVC()
     private var dl = downloaderLogic()
     private let cellid = "cellid"
-    
-    internal var IP: String = ""
+    var filteredData: [String]!
+
+    internal var IP: String = "" {
+        didSet {
+            print("[+] IP Value Set by [URL PARSER] \n \(IP)")
+            urlTextView?.text = IP.lowercased()
+        }
+    }
     internal var USER: String = ""
     internal var PORT: String = ""
     fileprivate var imagePicker = UIImagePickerController()
@@ -27,6 +32,11 @@ import SwiftSoup
     @IBOutlet weak var progressBar: UIProgressView?
     @IBOutlet weak var progressLbl: UILabel!
     @IBOutlet weak var urlLbl: UILabel!
+    
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var urlTextView: UITextView?
+    @IBOutlet weak var dlView: UIView!
+    
     
     @IBAction func openLibraryButton(sender: AnyObject) {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
@@ -53,25 +63,40 @@ import SwiftSoup
     
     
     @IBOutlet weak var uiSearchBar: UISearchBar! {
+        
         didSet {
-            let text = uiSearchBar?.text?.lowercased()
-            let newUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
-            if newUrl.isEmpty || newUrl.hasPrefix("http://") {
-                var dialogMessage = UIAlertController(title: "Attention", message: "tls required, add https", preferredStyle: .alert)
+            DispatchQueue.main.async {
+                [weak self] in
+                
+                print("[!] UI SearchBar set")
+                let text = self?.uiSearchBar?.text?.lowercased()
+                let newUrl = urlParser.fetch.changeUrl(newLink: self?.uiSearchBar?.text)
+                if newUrl.isEmpty || newUrl.hasPrefix("http://") {
+                    var dialogMessage = UIAlertController(title: "Attention", message: "tls required, add https", preferredStyle: .alert)
+                }
+                
+                self?.IP = text!.description
+                print("[!] UI SearchBar Text \(newUrl))")
+                print(text)
+                urlParser.fetch.changeUrl(newLink: text)
+                print(urlParser.fetch.getUrl())
+                print("[+] New Url After Searchbar Change,\n \(newUrl)")
+                print("[!][!] --> URLPARSER \(urlParser.url.description) ")
+                print("[!][!] --> IP \(self?.IP) ")
+                
             }
-            print("[!] UI SearchBar Text \(newUrl))")
-            print(text)
-            urlParser.fetch.changeUrl(newLink: text)
-            print(urlParser.fetch.getUrl())
-            print("[+] New Url After Searchbar Change,\n \(newUrl)")
         }
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
     }
     
     @IBAction func uploadBtn(_ sender: UIButton) {
         print("[!] User has initiated uploading button")
         performSegue(withIdentifier: "uploadSegue", sender: self)
     }
-    
+
     
     @IBAction func ftpBtn (_ sender: UIButton) {
         print("[FTP] Pressed")
@@ -124,10 +149,14 @@ import SwiftSoup
     }
     
     internal func handleHttpDwn(textViewData: String) {
-        print("[!] [textview URL] \(dl.url)")
+        //https://archive.org/download/nes-romset-ultra-us/1942%20%28U%29%20%5B%21%5D.zip
+        // let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
+
+        print("[!] [textview URL] \(dl.dlURL)")
         print("[!] [download URL] \(textViewData)")
-        dl.url = textViewData
-        try? dl.setSession()
+        dl.dlURL = textViewData
+        let data = try? dl.setDLSession()
+        //FileLogic
     }
     
     
@@ -141,7 +170,7 @@ import SwiftSoup
     @objc func didUpdateNotification(_ notification: Notification) throws {
         print("[!].. Editing notification center.. ")
         guard let fetchURL = notification.object as? String else { throw notificationError.passNotificationErr }
-        try?dl.setSession()
+        try?dl.setDLSession()
         
     }
     private func printHrefSoupList(ahref: [Element] , count: Int, ptag: [Element]) {
@@ -149,16 +178,60 @@ import SwiftSoup
         print(".. \(count) \(ahref) \(ptag)")
     }
     
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        uiSearchBar.delegate = self
+        filteredData = IP
         progressBar?.progress = 0
+        
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateNotification), name: .downloadURL , object: nil)
         // try?dl.setSession()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        print("[!][!] [viewWillAppear CALLED] ")
+        view.addSubview(dlView)
+        view.reloadInputViews()
+        urlTextView?.text = urlParser.url.description
+        urlTextView?.text = IP
+        print("[!][!] --> URLPARSER \(urlParser.url.description) ")
+        print("[!][!] --> IP \(IP) ")
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        print("[!][!] [viewWillLayoutSubviews CALLED] ")
+        view.addSubview(dlView)
+        view.reloadInputViews()
+        urlTextView?.text = urlParser.url.description
+        urlTextView?.text = IP
+        print("[!][!] --> URLPARSER \(urlParser.url.description) ")
+        print("[!][!] --> IP \(IP) ")
+
+            // urlTextView?.text = urlParser.fetch.getUrl()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        print("[!][!] [viewDidAppear CALLED] ")
+        view.addSubview(dlView)
+        urlTextView?.text = urlParser.url.description
+        urlTextView?.text = IP
+        view.reloadInputViews()
+        print("[!][!] --> URLPARSER \(urlParser.url.description) ")
+        print("[!][!] --> IP \(IP) ")
+
+    }
+    override func reloadInputViews() {
+        super.reloadInputViews()
+        print("[!][!] [RELOAD INPUT VIEWS CALLED] ")
+        urlTextView?.text = urlParser.url.description
+        urlTextView?.text = IP
+        view.reloadInputViews()
+        print("[!][!] --> URLPARSER \(urlParser.url.description) ")
+        print("[!][!] --> IP \(IP) ")
+    }
   
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -177,7 +250,7 @@ import SwiftSoup
         print("[!] Handling FTP Data")
         let ftpURL = "ftp://\(urlParser.url.description):21"
         print("url textview set \(ftpURL)")
-        guard dl.url == ftpURL else { return }
+        guard dl.dlURL == ftpURL else { return }
         print("[!] dl.url FTP - \(ftpURL)")
         self.performSegue(withIdentifier: "FtpSeg", sender: self)
         
@@ -186,7 +259,7 @@ import SwiftSoup
     func handleSMB(textViewData: String?) {
         print("[!] Handling SMB Data")
         let smbURL = "smb://\(urlParser.url.description):445"
-        guard dl.url == smbURL else { return }
+        guard dl.dlURL == smbURL else { return }
         print("[!] HANDLE SMB URL \(smbURL)")
         print("[!] dl.url FTP - \(smbURL)")
         
@@ -222,6 +295,19 @@ import SwiftSoup
         
     }
 }
+
+extension DownloaderVC: UISearchBarDelegate {
+    func UISearchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if (filteredData != nil) == searchText.isEmpty {
+            { (item: String) -> Bool in
+                return item.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+            }
+            
+        }
+        
+    }
+}
+
 
 extension DispatchQueue {
     static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {

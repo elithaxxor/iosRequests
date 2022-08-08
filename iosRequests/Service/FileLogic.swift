@@ -23,7 +23,7 @@ internal class FileLogic {
         guard let mainDir = try? FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
         guard let downloadDir = try? FileManager.default.urls(for: .downloadsDirectory, in: .userDomainMask).first else { return }
         guard let cachedDir = try? FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else { return }
-        let path = (try? getImgPath(name: "\(name).jpg")) ?? cachedDir
+        let path = (try? getLocalPath(name: "\(name).jpg")) ?? mainDir
 
         do {
             try data.write(to: path)
@@ -40,7 +40,7 @@ internal class FileLogic {
 
 
     // MARK: Returns imge path,
-    internal func getImgPath(name: String) throws -> URL? {
+    internal func getLocalPath(name: String) throws -> URL? {
         print("[!] Getting Image Path for: \(name).jpg")
         guard
             let cachePath = FileManager
@@ -56,14 +56,14 @@ internal class FileLogic {
     //MARK: Returns Binary data of img from parsed path, returns UIIMAGE
     internal func getImg(name: String) throws -> UIImage? {
         print("[!] Getting Image from Path for: \(name).jpg")
-        guard let path = try? getImgPath(name: name)?.path else { throw LocalFileErr.getImgErr }
+        guard let path = try? getLocalPath(name: name)?.path else { throw LocalFileErr.getImgErr }
         return UIImage(contentsOfFile: path)
     }
     
     internal func deleteImg(name: String) throws {
         print("[!] Deleting Image from Path: \(name).jpg")
-        guard let path = try getImgPath(name: name) else { throw LocalFileErr.deleteImgErr }
-        guard let pathStr = try getImgPath(name: name)?.path else { throw LocalFileErr.deleteImgErr }
+        guard let path = try getLocalPath(name: name) else { throw LocalFileErr.deleteImgErr }
+        guard let pathStr = try getLocalPath(name: name)?.path else { throw LocalFileErr.deleteImgErr }
         if (FileManager.default.fileExists(atPath: pathStr) == true) {
             do {
                 try FileManager.default.removeItem(at: path)
