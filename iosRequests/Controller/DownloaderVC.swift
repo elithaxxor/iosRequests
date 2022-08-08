@@ -75,7 +75,7 @@ import SwiftSoup
                     var dialogMessage = UIAlertController(title: "Attention", message: "tls required, add https", preferredStyle: .alert)
                 }
                 
-                self?.IP = text!.description
+                self?.IP = urlParser.url.description
                 print("[!] UI SearchBar Text \(newUrl))")
                 print(text)
                 urlParser.fetch.changeUrl(newLink: text)
@@ -146,6 +146,8 @@ import SwiftSoup
         
         print("[Download Url Being Parsed \(downlUrl)")
         handleHttpDwn(textViewData: downlUrl)
+ 
+
     }
     
     internal func handleHttpDwn(textViewData: String) {
@@ -180,52 +182,40 @@ import SwiftSoup
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        uiSearchBar.delegate = self
-        filteredData = IP
+     //   uiSearchBar.delegate = self
+       // filteredData = IP
         progressBar?.progress = 0
         
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateNotification), name: .downloadURL , object: nil)
         // try?dl.setSession()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(false)
-        print("[!][!] [viewWillAppear CALLED] ")
-        view.addSubview(dlView)
-        view.reloadInputViews()
-        urlTextView?.text = urlParser.url.description
-        urlTextView?.text = IP
-        print("[!][!] --> URLPARSER \(urlParser.url.description) ")
-        print("[!][!] --> IP \(IP) ")
-    }
+
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
-        print("[!][!] [viewWillLayoutSubviews CALLED] ")
-        view.addSubview(dlView)
-        view.reloadInputViews()
+        print("\n \n [!][!] [viewWillLayoutSubviews CALLED] ")
         urlTextView?.text = urlParser.url.description
         urlTextView?.text = IP
+        urlTextView?.text = urlParser.fetch.getUrl()
+
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
-
-            // urlTextView?.text = urlParser.fetch.getUrl()
+        view.addSubview(dlView)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
         print("[!][!] [viewDidAppear CALLED] ")
-        view.addSubview(dlView)
         urlTextView?.text = urlParser.url.description
         urlTextView?.text = IP
-        view.reloadInputViews()
+       /// view.reloadInputViews()
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
-
+        view.addSubview(dlView)
     }
     override func reloadInputViews() {
         super.reloadInputViews()
-        print("[!][!] [RELOAD INPUT VIEWS CALLED] ")
+        print("\n \n [!][!] [RELOAD INPUT VIEWS CALLED] ")
         urlTextView?.text = urlParser.url.description
         urlTextView?.text = IP
         view.reloadInputViews()
@@ -295,32 +285,18 @@ import SwiftSoup
         
     }
 }
-
-extension DownloaderVC: UISearchBarDelegate {
-    func UISearchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if (filteredData != nil) == searchText.isEmpty {
-            { (item: String) -> Bool in
-                return item.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
-            }
-            
-        }
-        
-    }
-}
+//
+//extension DownloaderVC: UISearchBarDelegate {
+//    func UISearchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+////        if (filteredData != nil) == searchText.isEmpty
+////            { (item: String) -> Bool in
+////                return item.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
+////            }
+////
+//    }
+//}
 
 
-extension DispatchQueue {
-    static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {
-        DispatchQueue.global(qos: .background).async {
-            background?()
-            if let completion = completion {
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
-                    completion()
-                })
-            }
-        }
-    }
-}
 
 
 /*

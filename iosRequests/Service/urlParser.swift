@@ -19,7 +19,7 @@ internal class urlParser {
             var gotUrl = urlParser.url.description.lowercased()
             DownloaderVC.shared.urlTextView?.text = gotUrl.lowercased()
             DownloaderVC.shared.IP = gotUrl.lowercased()
-            self?.dlVC.urlTextView?.text = gotUrl.lowercased()
+           // self?.dlVC.urlTextView?.text = gotUrl.lowercased()
             self?.updateHomeVC(text:gotUrl)
             print("[!] Passing Url.. \(urlParser.url.description)")
         }
@@ -41,8 +41,9 @@ internal class urlParser {
         DispatchQueue.main.async {
             [weak self] in
             print("[!] Updating HomeVC [URL TEXT VIEW] --> \(text)")
-            self?.dlVC.urlTextView?.text = text
-            DownloaderVC.shared.urlTextView?.text = text.description
+            //self?.dlVC.urlTextView?.text = text
+            DownloaderVC.shared.urlTextView?.text = text
+            DownloaderVC.shared.viewWillAppear(true)
         }
    
     }

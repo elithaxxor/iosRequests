@@ -26,6 +26,16 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
                                              delegate: self,
                                              delegateQueue: nil)
     
+    public func updateHomeVCText(text: String) {
+        DispatchQueue.main.async {
+            [weak self] in
+            print("[!] Updating HomeVC [DOWNLOAD TEXT VIEW] --> \(text)")
+            DownloaderVC.shared.textView?.text = text
+            DownloaderVC.shared.viewWillAppear(true)
+        }
+        
+    }
+        
     internal func setFTPSession() throws {
         let config = URLSessionConfiguration.ephemeral
         config.urlCredentialStorage = nil
@@ -38,11 +48,14 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
         print("Performed URL Grab on \(sessionURL.absoluteURL)")
     }
     
+   
     
     internal func setDLSession() throws {
         let dlUrl = urlParser.fetch.getUrl()
         
         print("[!] Starting Fetch on \(dlUrl)")
+        updateHomeVCText(text: dlUrl)
+
         DispatchQueue.global(qos: .userInitiated).async {
             [weak self] in
             
@@ -53,7 +66,7 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
             guard let sessionURL = URL(string: dlUrl)  else { return  } //?? URL(string: "https://httpbin.org/anything")
             
             var session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
-            
+            self?.updateHomeVCText(text: session.description)
             var downloadTask = URLSession.shared.downloadTask(with: sessionURL) {
                 [weak self] data, response, error in
                 
@@ -78,8 +91,10 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
             }
             
             downloadTask.resume()
+            let complete: String = "[+] Performed URL Grab on \n \(String(describing: sessionURL.absoluteURL)) "
             print("[+] Performed URL Grab on \n \(String(describing: sessionURL.absoluteURL)) ")
             print(downloadTask)
+            self?.updateHomeVCText(text: complete)
         }
     }
 }
