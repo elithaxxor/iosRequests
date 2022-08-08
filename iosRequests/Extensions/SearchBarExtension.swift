@@ -10,7 +10,9 @@ import UIKit
 
 
 extension HrefSoup: UISearchBarDelegate {
+    
     internal func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        print("[!] Search Bar (soup view) text did change. ")
         DispatchQueue.global(qos: .userInitiated).async {
             [weak self] in
             var searchBarResultsArr = [String]()
@@ -31,6 +33,7 @@ extension HrefSoup: UISearchBarDelegate {
                 [weak self] in
                 print("[!] Reloading TableView after SearchResults")
                 self?.tableView.reloadData()
+                self?.viewWillAppear(true)
             }
         }
     }

@@ -44,6 +44,7 @@ internal class urlParser {
             //self?.dlVC.urlTextView?.text = text
             DownloaderVC.shared.urlTextView?.text = text
             DownloaderVC.shared.viewWillAppear(true)
+            DownloaderVC.shared.viewDidAppear(true)
         }
    
     }

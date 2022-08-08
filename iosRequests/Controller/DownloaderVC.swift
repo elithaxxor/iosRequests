@@ -35,7 +35,7 @@ import SwiftSoup
     
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var urlTextView: UITextView?
-    @IBOutlet weak var dlView: UIView!
+    @IBOutlet weak var dlView: UIView?
     
     
     @IBAction func openLibraryButton(sender: AnyObject) {
@@ -200,18 +200,29 @@ import SwiftSoup
 
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
-        view.addSubview(dlView)
+        view.addSubview(dlView!)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("[!][!] [VIEW WILL APPEAR CALLED] ")
+        urlTextView?.text = urlParser.url.description
+        
+        if dlView != nil {
+            view.addSubview(dlView!)
+        }
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
         print("[!][!] [viewDidAppear CALLED] ")
         urlTextView?.text = urlParser.url.description
-        urlTextView?.text = IP
+        urlTextView?.text = urlParser.url.description
        /// view.reloadInputViews()
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
-        view.addSubview(dlView)
+        if dlView != nil {
+            view.addSubview(dlView!)
+        }
     }
     override func reloadInputViews() {
         super.reloadInputViews()

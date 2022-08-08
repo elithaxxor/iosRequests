@@ -18,10 +18,10 @@ import Combine
 {
     public var soupLinks : [Element] = [Element]()
     public let name = Notification.Name("")
-    
     public var subscriptions = Set<AnyCancellable>()
     
     
+ 
     fileprivate let urlTableViewCell = UrlTableViewCell()
     internal var searchBarResults: [Element]?
     
@@ -91,9 +91,14 @@ import Combine
             self?.handleHTTPSoup(textViewData: hmtlString)
         }
     }
-    
+  
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        self.setupViews()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         self.setupViews()
     }
     
@@ -127,7 +132,6 @@ import Combine
     
     fileprivate func getHTML(textViewData: String?) -> String {
         print("[!] Prasing HTML to String.. \(String(describing: textViewData))")
-        
         
         
         let myURLString = urlParser.url
@@ -171,8 +175,16 @@ import Combine
                 let ahrefArr = ["userInfo": [ahref]]
                 let ptagArr = ["userInfo": [ptag]]
                 
+                for value in ahref {
+                    print(value)
+                    let parsedVal = try? value.removeClass("<a class")
+                        print("contains href \n \(parsedVal)")
+
+                }
+                
                 //self?.soupLinks = ahref
                 self?.soupLinks.append(contentsOf: ahref)
+            
                 
                 let hrefCount = buildCells.build.setCountHREF(newCount: ahrefCount)
                 let ptagCount = buildCells.build.setCountPTAG(newCount: ptagCount)
