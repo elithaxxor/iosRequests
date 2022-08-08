@@ -7,13 +7,15 @@
 
 import WebKit
 import UIKit
+import SafariServices
+
 
 internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
 {
-    
     private static var check = FtpView()
     private var dl = downloaderLogic()
-    
+   // private let ss = SafariServices
+
     private let backupURL = URL(string: "ftp://arobotsandbox.asuscomm.com:21")!
     private let backupURLString: String  = "ftp://arobotsandbox.asuscomm.com:21"
     
@@ -23,14 +25,14 @@ internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
         print("[!] Ftp Search Bar Touched. ")
     }
     
-    @IBOutlet weak var ftpWeb : WKWebView? {
+    @IBOutlet weak var ftpWeb : WKWebView! {
         didSet {
             let preferences = WKPreferences()
             preferences.javaScriptEnabled = true
             let configuration = WKWebViewConfiguration()
             configuration.preferences = preferences
             let webView = WKWebView(frame: .zero, configuration: configuration)
-            parseUIView(webView)
+            parseUIView(ftpWeb!)
         }
     }
     
@@ -38,16 +40,23 @@ internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
     @IBOutlet weak var searchBar: UISearchBar!
 
     private func parseUIView(_ uiView: WKWebView) {
-        let url = ftpURL.description
-        let requestURL = URLRequest(url: URL(string: url )!)
+        var url = ftpURL.description
+        url = "ftp://\(url):21"
+        var requestURL = URLRequest(url: URL(string: url )!)
         print("[!] Starting Request on \(requestURL)")
-        ftpWeb?.load(requestURL)
+        uiView.load(requestURL)
     }
+    
+    private func delayRun(after seconds: Int, completion: @escaping() -> Void) {
+        let deadline = DispatchTime.now() + .seconds(seconds)
+        DispatchQueue.main.asyncAfter(deadline: deadline) { completion() }
+    }
+    
     
     
     var ftpURL: String = "" {
         didSet {
-            print("ftp url set")
+            print("[!] ftp url set \(ftpURL.description)")
         }
     }
     
@@ -55,21 +64,33 @@ internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
         super.viewDidLoad()
         print("[!] View Did Load- Passed \(ftpURL)")
         
-        let url = URL(string: self.ftpURL )
+        let url = URL(string: ftpURL )
         let request =  URLRequest(url: url!)
         let configuration = WKWebViewConfiguration()
         let webView = WKWebView(frame: .zero, configuration: configuration)
 
+        parseNotification()
         FtpTextField?.text = url?.absoluteString
         //FtpTextField?.text = request.description
-        ftpWeb!.load(request)
+        // ftpWeb!.load(request)
         parseUIView(webView)
         
     }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
+        //parseUIView(ftpWeb?)
+        //parseUIView(ftpWeb)
         ftpWeb?.reload()
+        view.addSubview(ftpWeb)
+    }
+    
+    
+    private func parseNotification() {
+        let addSymbol2Url = NSNotification.Name.ftpHref
+        let url = URL(string: ftpURL )
+        let request =  URLRequest(url: url!)
+        ftpWeb!.load(request)
     }
     
     // TODO: On User Press -- Initiate download session:

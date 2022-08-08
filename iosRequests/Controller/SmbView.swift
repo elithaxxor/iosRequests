@@ -33,18 +33,14 @@ internal class SmbView: ViewControllerLogger {
 
         group.wait()
         group.enter()
-
-        let url = self.smbURL.lowercased()
         let backupURL = "smb://arobotsandbox.asuscomm.com:445"
         let backupURLformatted = URL(string: "smb://arobotsandbox.asuscomm.com:139")!
-        let urlFormatted = URL(string: url)
-        
-        if url != nil || backupURLformatted != nil {
-            let storedURL = URL(string: self.parseUrl)
-            let requestURL = URLRequest(url: urlFormatted ?? backupURLformatted)
-            print("[!] Starting Request on \(requestURL)")
-            self.smbWeb?.load(requestURL)
-        }
+
+        var url = self.smbURL.lowercased()
+        url = "smb://\(url):445"
+        let requestURL = URLRequest(url: URL(string: url ) ?? backupURLformatted)
+        print("[!] Starting Request on \(requestURL)")
+        uiView.load(requestURL)
         group.leave()
         
     }
@@ -54,6 +50,7 @@ internal class SmbView: ViewControllerLogger {
         super.viewDidLoad()
         let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!
         let backupURLString = "smb://arobotsandbox.asuscomm.com:445"
+        
         if let url = URL(string: smbURL.lowercased() ) {
             print("[+] URL Value for WebView \(url)")
             searchBar.text = smbURL.lowercased().description
@@ -66,7 +63,4 @@ internal class SmbView: ViewControllerLogger {
         super.viewWillLayoutSubviews()
         view.addSubview(smbWeb!)
     }
-    
-    
-    
 }

@@ -14,15 +14,6 @@ import Combine
 // TODO: Add beaituflsoup list to subscriber (use async background)
 // MARK: Test String https://www.tvseries.watch/series/the-simpsons
 
-//protocol Subscriber {
-//    associatedtype Input
-//    associatedtype Failure
-//
-//    func recieve(subscription: Subscription)
-//    func recieve(_ input: Input) -> Subscribers.Demand
-//    func recieve(completion: Subscribers.Completion<Failure>)
-//}
-
 @IBDesignable class HrefSoup: ViewControllerLogger
 {
     public var soupLinks : [Element] = [Element]()
@@ -32,7 +23,7 @@ import Combine
     
     
     fileprivate let urlTableViewCell = UrlTableViewCell()
-    fileprivate var searchBarResults: [Element]?
+    internal var searchBarResults: [Element]?
     
     @IBInspectable var soupURL: String = ""
     @IBOutlet weak var tableView: UITableView!
@@ -90,7 +81,7 @@ import Combine
             print("[!] View Did Load- Passed \(String(describing: self?.soupURL))")
             let url = urlParser.url
             self?.textView?.text = url
-            print(self?.soupURL)
+            print(self?.soupURL ?? "DEFAULT VALUE FOR PARSE INFO")
             //self?.setupView()
             self?.setupViews()
             
@@ -137,6 +128,8 @@ import Combine
     fileprivate func getHTML(textViewData: String?) -> String {
         print("[!] Prasing HTML to String.. \(String(describing: textViewData))")
         
+        
+        
         let myURLString = urlParser.url
         guard let myURL = URL(string: myURLString) else {
             print("Error: \(myURLString) doesn't seem to be a valid URL")
@@ -152,6 +145,7 @@ import Combine
             print("Error: \(error)")
         }
         return "https://www.tvseries.watch/series/the-simpsons"
+        
     }
     
     fileprivate func handleHTTPSoup(textViewData: String?){
@@ -186,19 +180,18 @@ import Combine
                 print("[!] Set HREF tags to : \(hrefCount)"); print("[!] Set PTAG tags to : \(ptagCount)")
                 print("*****************"); print("SOUPLINKS"); print(self?.soupLinks)
                 self?.tableView?.reloadData()
-               
+                
                 let subscribedSoup = Just(self!.soupLinks)
                     .map { (value) -> [Element] in
                         return value
                     }
                     .sink { (receivedValue) in
                         print(" ************************ \n [+] Notification Center Values \n \n  \(receivedValue) \n ******************* \n \n")
-
+                        
                     } .store(in: &self!.subscriptions)
                 
                 print("[SUBSCRIPTIONS STORE] :: \(String(describing: self?.subscriptions.description))")
                 print("[SUBSCRIPTIONS COUNT] :: \(String(describing: self?.subscriptions.count))")
-
                 print("\n \n [!][!] BACKGROUND THREAD ENDED [!][!] ")
                 group.leave()
             }
@@ -219,84 +212,6 @@ import Combine
     }
     
     
-}
-extension notificationError {
-    public var notificationErrDescriotion : String {
-        switch self {
-        case .passNotificationErr : return "[-] caught error in notification, please edit"
-        case .fetchSoupErr : return "[-] caught error in populating soup Array "
-        }
-    }
-}
-extension Notification.Name {
-    internal static let downloadURL = Notification.Name("downloadURL")
-    internal static let soupHref = Notification.Name("soupHref")
-    internal static let soupPtags = Notification.Name("soupPtags")
-}
-
-extension HrefSoup: UITableViewDelegate, UITableViewDataSource {
-    internal func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var cell = tableView.dequeueReusableCell(withIdentifier: "cellid", for: indexPath)
-        
-        let idx = soupLinks[indexPath.row]
-        print(idx.data())
-        cell.backgroundColor = .gray
-        cell.textLabel?.text = idx.description
-        
-        return cell
-    }
-    internal func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("[!] Table View is returning \(soupLinks.count)")
-        let numberOfRowsInSection = soupLinks.count
-        print("numberOfRowsInSection \(String(describing: numberOfRowsInSection))")
-        return numberOfRowsInSection ?? 2
-    }
-    
-    
-    internal func numberOfSections(in tableView: UITableView) -> Int {
-        let numbersInSection = buildCells.cellCountHREF
-        print("[!] Table View For # of sections! [\(String(describing: numbersInSection))]")
-        return numbersInSection ?? 2
-    }
-    internal func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        print("[!] Table View For Editing! ")
-        return true
-    }
-    internal func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> [UITableViewRowAction] {
-        
-        let deleteAction = UITableViewRowAction(style: .destructive, title: "delete") { [weak self] action, indexpPath in
-            self?.soupLinks.remove(at: indexPath.row)
-            self?.tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
-        return [deleteAction]
-    }
-}
-
-extension HrefSoup: UISearchBarDelegate {
-    internal func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            [weak self] in
-            var searchBarResultsArr = [String]()
-            self?.searchBarResults = []
-            
-            if searchText == "" {
-                self?.searchBarResults = self?.soupLinks
-            }
-            for result in self?.soupLinks ?? []  {
-                if result != nil {
-                    var filteredResults = try? result.getElementsContainingText("<a href=")
-                    self?.searchBarResults?.insert(contentsOf: filteredResults!, at: 0)
-                    print("[!] SearchBar Non Filtered Results \n \(result)")
-                    print("[+] SearchBar Filtered Results \n \(filteredResults)")
-                }
-            }
-            DispatchQueue.main.async {
-                [weak self] in
-                print("[!] Reloading TableView after SearchResults")
-                self?.tableView.reloadData()
-            }
-        }
-    }
 }
 
 

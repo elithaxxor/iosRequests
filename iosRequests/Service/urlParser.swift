@@ -20,12 +20,10 @@ internal class urlParser {
             print("[!] Changing URL00 \(String(describing: changeUrl))")
             print("[!] Changing URL01 \(urlParser.url)")
             
-            
             var returnText = urlParser.url.description
             print(returnText)
             //  return urlParser.url.description
             return returnText
-        
     }
 }
                            

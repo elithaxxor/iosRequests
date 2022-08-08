@@ -223,41 +223,6 @@ import SwiftSoup
     }
 }
 
-enum notificationError: Error {
-    case passNotificationErr
-    case fetchSoupErr
-    
-}
-
-
-extension DownloaderVC: UITableViewDelegate, UITableViewDataSource {
-     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellid", for: indexPath)
-        let idx = soupLinks[indexPath.row]
-        print("[!] Tableview processing cell[IDX] \(idx)")
-        cell.backgroundColor = .gray
-        cell.textLabel?.text = idx.description
-        return cell
-    }
-     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("[!] Table View is returning \(soupLinks.count)")
-        return soupLinks.count
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete else { return }
-        soupLinks.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        guard editingStyle == .insert else { return }
-        tableView.insertRows(at: [indexPath], with: .automatic)
-        
-    }
- 
-}
-
-
-
-
 extension DispatchQueue {
     static func background(delay: Double = 0.0, background: (()->Void)? = nil, completion: (() -> Void)? = nil) {
         DispatchQueue.global(qos: .background).async {

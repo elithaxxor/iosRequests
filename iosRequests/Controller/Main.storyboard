@@ -289,6 +289,8 @@
                                 <rect key="frame" x="16" y="44" width="358" height="631"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="sectionIndexColor" systemColor="linkColor"/>
+                                <color key="sectionIndexBackgroundColor" systemColor="labelColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellid" rowHeight="48" id="n4f-Uf-7Wr">
                                         <rect key="frame" x="0.0" y="50" width="358" height="48"/>
@@ -297,6 +299,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="358" height="48"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
+                                        <color key="backgroundColor" systemColor="labelColor"/>
                                         <accessibility key="accessibilityConfiguration">
                                             <bool key="isElement" value="YES"/>
                                         </accessibility>
@@ -305,7 +308,7 @@
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="bRP-Yw-7Ru"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="labelColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="F7K-xy-3qw"/>
                     <connections>
@@ -319,8 +322,8 @@
         <!--FtpView-->
         <scene sceneID="7cU-4G-r07">
             <objects>
-                <viewController storyboardIdentifier="FtpView" title="HrefView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cJP-cQ-lQT" userLabel="FtpView" customClass="FtpView" customModule="iosRequests" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="7gU-zt-sMc" userLabel="Ftp View" customClass="HrefView">
+                <viewController storyboardIdentifier="FtpView" title="FtpView" useStoryboardIdentifierAsRestorationIdentifier="YES" id="cJP-cQ-lQT" userLabel="FtpView" customClass="FtpView" customModule="iosRequests" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="7gU-zt-sMc" userLabel="ftpView" customClass="ftpView" customModule="iosRequests" customModuleProvider="target">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="790"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
@@ -333,13 +336,13 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                 <textInputTraits key="textInputTraits"/>
                             </searchBar>
-                            <wkWebView contentMode="scaleToFill" fixedFrame="YES" customUserAgent="FtpWeb" translatesAutoresizingMaskIntoConstraints="NO" id="YmH-Pb-coZ" userLabel="FtpWeb">
+                            <wkWebView multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" allowsBackForwardNavigationGestures="YES" customUserAgent="ftpWeb" findInteractionEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YmH-Pb-coZ" userLabel="ftpWeb">
                                 <rect key="frame" x="31" y="144" width="315" height="462"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration" applicationNameForUserAgent="FtpWeb">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences"/>
+                                <wkWebViewConfiguration key="configuration" allowsInlineMediaPlayback="YES" applicationNameForUserAgent="ftpWeb">
+                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" audio="YES" video="YES"/>
+                                    <wkPreferences key="preferences" javaScriptCanOpenWindowsAutomatically="YES"/>
                                 </wkWebViewConfiguration>
                             </wkWebView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="8Uc-T5-xP7" userLabel="FtpTextField">
@@ -352,9 +355,12 @@
                             </textView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="hsb-VQ-a5Y"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" systemColor="labelColor"/>
                     </view>
                     <navigationItem key="navigationItem" id="K8x-8Z-LqO"/>
+                    <connections>
+                        <outlet property="ftpWeb" destination="YmH-Pb-coZ" id="wzp-w9-cXY"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bBn-3M-t6y" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -364,6 +370,9 @@
     <resources>
         <systemColor name="labelColor">
             <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

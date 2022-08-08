@@ -27,6 +27,11 @@
 		651D16AF289B04CD003BBC13 /* UrlTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D16AE289B04CD003BBC13 /* UrlTableViewCell.swift */; };
 		651D16B2289B053A003BBC13 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 651D16B1289B053A003BBC13 /* SwiftSoup */; };
 		657CD18028A07AF800135E10 /* buildCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD17F28A07AF800135E10 /* buildCells.swift */; };
+		657CD18328A090EB00135E10 /* NotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD18228A090EB00135E10 /* NotificationExtension.swift */; };
+		657CD18528A0914100135E10 /* SearchBarExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD18428A0914100135E10 /* SearchBarExtension.swift */; };
+		657CD18728A0918D00135E10 /* TableViewExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD18628A0918D00135E10 /* TableViewExtensions.swift */; };
+		657CD18928A091EB00135E10 /* urlSessionsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD18828A091EB00135E10 /* urlSessionsExtension.swift */; };
+		657CD18C28A0923F00135E10 /* localFileExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD18B28A0923F00135E10 /* localFileExtensions.swift */; };
 		65EE7472289B97F500C67BDB /* HrefView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7471289B97F500C67BDB /* HrefView.swift */; };
 		65EE7474289BA31E00C67BDB /* SmbView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7473289BA31E00C67BDB /* SmbView.swift */; };
 		65EE7478289BA81D00C67BDB /* FtpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EE7477289BA81D00C67BDB /* FtpView.swift */; };
@@ -55,6 +60,11 @@
 		651D16AB289B04AB003BBC13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../DownloadManagerIII/DownloadManagerIII/Views/Assets.xcassets; sourceTree = "<group>"; };
 		651D16AE289B04CD003BBC13 /* UrlTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlTableViewCell.swift; sourceTree = "<group>"; };
 		657CD17F28A07AF800135E10 /* buildCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = buildCells.swift; path = iosRequests/Service/buildCells.swift; sourceTree = "<group>"; };
+		657CD18228A090EB00135E10 /* NotificationExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationExtension.swift; sourceTree = "<group>"; };
+		657CD18428A0914100135E10 /* SearchBarExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBarExtension.swift; sourceTree = "<group>"; };
+		657CD18628A0918D00135E10 /* TableViewExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewExtensions.swift; sourceTree = "<group>"; };
+		657CD18828A091EB00135E10 /* urlSessionsExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = urlSessionsExtension.swift; sourceTree = "<group>"; };
+		657CD18B28A0923F00135E10 /* localFileExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = localFileExtensions.swift; sourceTree = "<group>"; };
 		65EE7471289B97F500C67BDB /* HrefView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HrefView.swift; sourceTree = "<group>"; };
 		65EE7473289BA31E00C67BDB /* SmbView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmbView.swift; sourceTree = "<group>"; };
 		65EE7477289BA81D00C67BDB /* FtpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FtpView.swift; sourceTree = "<group>"; };
@@ -94,6 +104,7 @@
 		651D1673289B0333003BBC13 /* iosRequests */ = {
 			isa = PBXGroup;
 			children = (
+				657CD18128A090DC00135E10 /* Extensions */,
 				651D16AD289B04C7003BBC13 /* View */,
 				651D1694289B0429003BBC13 /* Delegates */,
 				651D168F289B03DD003BBC13 /* Service */,
@@ -176,6 +187,18 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		657CD18128A090DC00135E10 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				657CD18228A090EB00135E10 /* NotificationExtension.swift */,
+				657CD18428A0914100135E10 /* SearchBarExtension.swift */,
+				657CD18628A0918D00135E10 /* TableViewExtensions.swift */,
+				657CD18828A091EB00135E10 /* urlSessionsExtension.swift */,
+				657CD18B28A0923F00135E10 /* localFileExtensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -253,6 +276,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				657CD18728A0918D00135E10 /* TableViewExtensions.swift in Sources */,
+				657CD18C28A0923F00135E10 /* localFileExtensions.swift in Sources */,
 				651D169E289B0480003BBC13 /* uploaderLogic.swift in Sources */,
 				651D16A0289B0489003BBC13 /* loginInfo.swift in Sources */,
 				65EE7474289BA31E00C67BDB /* SmbView.swift in Sources */,
@@ -260,11 +285,14 @@
 				651D169B289B0480003BBC13 /* urlParser.swift in Sources */,
 				657CD18028A07AF800135E10 /* buildCells.swift in Sources */,
 				651D16A8289B049D003BBC13 /* UploaderVC.swift in Sources */,
+				657CD18528A0914100135E10 /* SearchBarExtension.swift in Sources */,
 				65EE7478289BA81D00C67BDB /* FtpView.swift in Sources */,
 				651D169A289B0480003BBC13 /* FileLogic.swift in Sources */,
 				651D16AF289B04CD003BBC13 /* UrlTableViewCell.swift in Sources */,
+				657CD18928A091EB00135E10 /* urlSessionsExtension.swift in Sources */,
 				651D1675289B0333003BBC13 /* AppDelegate.swift in Sources */,
 				651D169C289B0480003BBC13 /* downloaderLogic.swift in Sources */,
+				657CD18328A090EB00135E10 /* NotificationExtension.swift in Sources */,
 				65EE7472289B97F500C67BDB /* HrefView.swift in Sources */,
 				651D169D289B0480003BBC13 /* bufferData.swift in Sources */,
 				651D16A3289B0493003BBC13 /* TableViewControllerLogger.swift in Sources */,
