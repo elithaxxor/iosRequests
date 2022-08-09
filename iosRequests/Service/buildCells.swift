@@ -8,6 +8,7 @@
 import Foundation
 
 
+
 internal class buildCells {
     static var build = buildCells()
     static var cellCountHREF: Int?

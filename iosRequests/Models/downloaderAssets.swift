@@ -4,7 +4,7 @@
 //
 //  Created by Adel Al-Aali on 8/8/22.
 //
-
+import Foundation.NSURL
 import Foundation
 import Foundation
 import SwiftSoup
@@ -13,7 +13,6 @@ import SwiftSoup
 
 class multipleDownloads {
     
-    static var shared = multipleDownloads.self
     var isDownloading = false
     var progress: Float = 0
     var resumeData: Data?
@@ -29,7 +28,7 @@ class multipleDownloads {
 
 class singleDownload {
     
-    static var shared = multipleDownloads.self
+    
     var isDownloading = false
     var progress: Float = 0
     var resumeData: Data?
@@ -43,3 +42,16 @@ class singleDownload {
 }
 
 
+class downloadInfo {
+  
+  let index: Int
+  let name: String
+  let previewURL: URL
+  var downloaded = false
+ 
+  init(name: String, previewURL: URL, index: Int) {
+    self.name = name
+    self.previewURL = previewURL
+    self.index = index
+  }
+}

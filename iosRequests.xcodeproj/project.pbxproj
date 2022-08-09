@@ -26,7 +26,7 @@
 		651D16AC289B04AB003BBC13 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 651D16AB289B04AB003BBC13 /* Assets.xcassets */; };
 		651D16AF289B04CD003BBC13 /* UrlTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651D16AE289B04CD003BBC13 /* UrlTableViewCell.swift */; };
 		651D16B2289B053A003BBC13 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 651D16B1289B053A003BBC13 /* SwiftSoup */; };
-		653B167228A207C10058E193 /* multipleDownloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B167128A207C10058E193 /* multipleDownloads.swift */; };
+		653B167228A207C10058E193 /* downloaderAssets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B167128A207C10058E193 /* downloaderAssets.swift */; };
 		655B246628A0BD52007F0DAF /* scrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B246528A0BD52007F0DAF /* scrap.swift */; };
 		655B246828A0DD33007F0DAF /* DispatchQueueExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 655B246728A0DD33007F0DAF /* DispatchQueueExtension.swift */; };
 		657CD18028A07AF800135E10 /* buildCells.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657CD17F28A07AF800135E10 /* buildCells.swift */; };
@@ -62,7 +62,7 @@
 		651D16A7289B049D003BBC13 /* loginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = loginVC.swift; sourceTree = "<group>"; };
 		651D16AB289B04AB003BBC13 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../DownloadManagerIII/DownloadManagerIII/Views/Assets.xcassets; sourceTree = "<group>"; };
 		651D16AE289B04CD003BBC13 /* UrlTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UrlTableViewCell.swift; sourceTree = "<group>"; };
-		653B167128A207C10058E193 /* multipleDownloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = multipleDownloads.swift; sourceTree = "<group>"; };
+		653B167128A207C10058E193 /* downloaderAssets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = downloaderAssets.swift; sourceTree = "<group>"; };
 		655B246528A0BD52007F0DAF /* scrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = scrap.swift; sourceTree = "<group>"; };
 		655B246728A0DD33007F0DAF /* DispatchQueueExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DispatchQueueExtension.swift; sourceTree = "<group>"; };
 		657CD17F28A07AF800135E10 /* buildCells.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = buildCells.swift; path = iosRequests/Service/buildCells.swift; sourceTree = "<group>"; };
@@ -111,6 +111,7 @@
 		651D1673289B0333003BBC13 /* iosRequests */ = {
 			isa = PBXGroup;
 			children = (
+				651D168B289B0389003BBC13 /* Models */,
 				657CD18128A090DC00135E10 /* Extensions */,
 				651D16AD289B04C7003BBC13 /* View */,
 				651D1694289B0429003BBC13 /* Delegates */,
@@ -118,7 +119,6 @@
 				651D168E289B03C9003BBC13 /* Loggers */,
 				651D168D289B03A5003BBC13 /* Assets */,
 				651D168C289B039B003BBC13 /* Controller */,
-				651D168B289B0389003BBC13 /* Models */,
 				651D1685289B0333003BBC13 /* Info.plist */,
 			);
 			path = iosRequests;
@@ -127,6 +127,7 @@
 		651D168B289B0389003BBC13 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				653B167128A207C10058E193 /* downloaderAssets.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -203,7 +204,6 @@
 				657CD18828A091EB00135E10 /* urlSessionsExtension.swift */,
 				657CD18B28A0923F00135E10 /* localFileExtensions.swift */,
 				655B246728A0DD33007F0DAF /* DispatchQueueExtension.swift */,
-				653B167128A207C10058E193 /* multipleDownloads.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -307,7 +307,7 @@
 				65EE7472289B97F500C67BDB /* HrefView.swift in Sources */,
 				651D169D289B0480003BBC13 /* bufferData.swift in Sources */,
 				651D16A3289B0493003BBC13 /* TableViewControllerLogger.swift in Sources */,
-				653B167228A207C10058E193 /* multipleDownloads.swift in Sources */,
+				653B167228A207C10058E193 /* downloaderAssets.swift in Sources */,
 				651D16AA289B049D003BBC13 /* loginVC.swift in Sources */,
 				651D16A9289B049D003BBC13 /* DownloaderVC.swift in Sources */,
 				651D1677289B0333003BBC13 /* SceneDelegate.swift in Sources */,
