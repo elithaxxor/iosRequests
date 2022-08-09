@@ -177,7 +177,11 @@ import SwiftSoup
         print("[!].. Editing notification center.. ")
         guard let fetchURL = notification.object as? String else { throw notificationError.passNotificationErr }
         try?dl.setDLSession()
-        
+    }
+    
+    @objc func hrefSoupNotification(_ notification: Notification) throws {
+        print("[!] Notification [HREF] on homeVC recieved from Soup ")
+        guard let hrefURL = notification.object as? String else { throw notificationError.fetchSoupErr }
     }
     private func printHrefSoupList(ahref: [Element] , count: Int, ptag: [Element]) {
         print("[+] Parsing users Soup Reqeust --> Displaying available downloads")
@@ -190,10 +194,15 @@ import SwiftSoup
        // filteredData = IP
         progressBar?.progress = 0
         
+        // Notification Obserervers [soup links / href direct download]
         NotificationCenter.default.addObserver(self, selector: #selector(didUpdateNotification), name: .downloadURL , object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(hrefSoupNotification), name: .soupHref, object: nil)
+        
         // try?dl.setSession()
     }
 
+    
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -242,7 +251,7 @@ import SwiftSoup
         super.didReceiveMemoryWarning()
     }
     
-    private func setupViews() {
+     func setupViews() {
         print("[!] Laying out [TABLE CELL VIEWS] ")
         self.tableView.reloadData()
         self.tableView.isHidden = false
@@ -300,73 +309,16 @@ import SwiftSoup
         
     }
 }
-//
-//extension DownloaderVC: UISearchBarDelegate {
-//    func UISearchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-////        if (filteredData != nil) == searchText.isEmpty
-////            { (item: String) -> Bool in
-////                return item.range(of: searchText, options: .caseInsensitive, range: nil, locale: nil) != nil
-////            }
-////
-//    }
-//}
+
+extension DownloaderVC: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if (filteredData != nil) == searchText.isEmpty
+        {
+            print("[!] Downloader SearchBar was Used! \n \(uiSearchBar.text?.description)")
+            
+        }
+    }
+}
 
 
-
-
-/*
- 
- DispatchQueue.background(delay: 3.0, background: {
- // do something in background
- }, completion: {
- // when background job finishes, wait 3 seconds and do something in main thread
- })
- 
- DispatchQueue.background(background: {
- // do something in background
- }, completion:{
- // when background job finished, do something in main thread
- })
- 
- DispatchQueue.background(delay: 3.0, completion:{
- // do something in main thread after 3 seconds
- })
- 
- */
-
-
-/*
- 
- // TO PASS DATA TO NOTIFICATION CENTER
- NotificationCenter.default
- .post(name: NSNotification.Name("com.user.login.success"),
- object: nil)
- 
- let loginResponse = ["userInfo": ["userID": 6, "userName": "John"]]
- NotificationCenter.default
- .post(name: NSNotification.Name("com.user.login.success"),
- object: nil,
- userInfo: loginResponse)
- 
- 
- 
- */
-
-
-/*
- 
- // TO PASS DATA TO NOTIFICATION CENTER
- NotificationCenter.default
- .post(name: NSNotification.Name("com.user.login.success"),
- object: nil)
- 
- let loginResponse = ["userInfo": ["userID": 6, "userName": "John"]]
- NotificationCenter.default
- .post(name: NSNotification.Name("com.user.login.success"),
- object: nil,
- userInfo: loginResponse)
- 
- 
- 
- */
 

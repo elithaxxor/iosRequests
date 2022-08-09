@@ -94,3 +94,63 @@ import Foundation
 
 //  FileLogic.work.createFolder()
 // FileLogic.work.saveData(data: T##Data, name: <#T##String#>)
+
+
+
+
+/*
+ 
+ DispatchQueue.background(delay: 3.0, background: {
+ // do something in background
+ }, completion: {
+ // when background job finishes, wait 3 seconds and do something in main thread
+ })
+ 
+ DispatchQueue.background(background: {
+ // do something in background
+ }, completion:{
+ // when background job finished, do something in main thread
+ })
+ 
+ DispatchQueue.background(delay: 3.0, completion:{
+ // do something in main thread after 3 seconds
+ })
+ 
+ */
+
+
+/*
+ 
+ // TO PASS DATA TO NOTIFICATION CENTER
+ NotificationCenter.default
+ .post(name: NSNotification.Name("com.user.login.success"),
+ object: nil)
+ 
+ let loginResponse = ["userInfo": ["userID": 6, "userName": "John"]]
+ NotificationCenter.default
+ .post(name: NSNotification.Name("com.user.login.success"),
+ object: nil,
+ userInfo: loginResponse)
+ 
+ 
+ 
+ */
+
+
+/*
+ 
+ // TO PASS DATA TO NOTIFICATION CENTER
+ NotificationCenter.default
+ .post(name: NSNotification.Name("com.user.login.success"),
+ object: nil)
+ 
+ let loginResponse = ["userInfo": ["userID": 6, "userName": "John"]]
+ NotificationCenter.default
+ .post(name: NSNotification.Name("com.user.login.success"),
+ object: nil,
+ userInfo: loginResponse)
+ 
+ 
+ 
+ */
+

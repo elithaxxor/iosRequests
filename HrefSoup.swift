@@ -19,6 +19,7 @@ import Combine
     public var soupLinks : [Element] = [Element]()
     public let name = Notification.Name("")
     public var subscriptions = Set<AnyCancellable>()
+    private let homeVC = DownloaderVC()
     
     
  
@@ -41,9 +42,6 @@ import Combine
         print("\n——— Example of:", description, "———")
         action()
     }
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         let cancellable = NotificationCenter.default
@@ -89,6 +87,17 @@ import Combine
             self?.searchBar?.text = self?.soupURL
             let hmtlString = self?.getHTML(textViewData: self?.soupURL)
             self?.handleHTTPSoup(textViewData: hmtlString)
+        }
+    }
+    
+    fileprivate func parseBackHome() {
+        DispatchQueue.main.async {
+            [weak self] in
+            print("[!] [!] Main thread initiated, sending hrefLinks back to home page [!] ")
+            DownloaderVC.shared.urlTextView?.text = urlParser.fetch.getUrl().description
+            DownloaderVC.shared.soupLinks = self!.soupLinks
+            DownloaderVC.shared.textView?.text =  self?.soupLinks.description
+            
         }
     }
   
@@ -202,11 +211,33 @@ import Combine
                         
                     } .store(in: &self!.subscriptions)
                 
+//                NotificationCenter.default.post(name: .soupHref(rawValue: "soupHref"), object: nil, userInfo: ahref)
+  
+                
+                group.wait()
+                DispatchQueue.main.async {
+                    [weak self] in
+                    print("[!] Pushing to main thread, to update homeVC with HREF SOUP LINKS \n [!][!] Saving data to notification center")
+                    NotificationCenter.default
+                        .post(name: NSNotification.Name(
+                            "soupHref"),
+                    object: nil)
+                    
+                    if self?.soupLinks != nil {
+                        print("[!]")
+                        DownloaderVC.shared.soupLinks = self!.soupLinks
+                        DownloaderVC.shared.textView?.text = self!.soupLinks.description
+                        self?.homeVC.setupViews()
+                        DownloaderVC.shared.reloadInputViews()
+                    }
+                }
+    
                 print("[SUBSCRIPTIONS STORE] :: \(String(describing: self?.subscriptions.description))")
                 print("[SUBSCRIPTIONS COUNT] :: \(String(describing: self?.subscriptions.count))")
                 print("\n \n [!][!] BACKGROUND THREAD ENDED [!][!] ")
                 group.leave()
             }
+            
             
             group.wait()
             DispatchQueue.main.async { [weak self] in

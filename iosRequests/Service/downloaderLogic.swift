@@ -19,15 +19,9 @@ internal class downloaderLogic: NSObject {
     public var dlURL: String = "" {
         didSet {
             print("[!] Downloader Logic URL set to \(dlURL.description)")
-            
             //try?setDLSession()
         }
     }
-    
-//    private lazy var urlSession = URLSession(configuration: .default,
-//                                             delegate: self,
-//                                             delegateQueue: nil)
-//
     
     public func updateHomeVCText(text: String) {
         DispatchQueue.main.async {
@@ -35,10 +29,10 @@ internal class downloaderLogic: NSObject {
             print("[!] Updating HomeVC [DOWNLOAD TEXT VIEW] --> \(text)")
             DownloaderVC.shared.textView?.text = text
             DownloaderVC.shared.viewWillAppear(true)
+            
         }
-        
     }
-        
+        // 
     internal func setFTPSession() throws {
         let config = URLSessionConfiguration.ephemeral
         config.urlCredentialStorage = nil
@@ -63,7 +57,6 @@ internal class downloaderLogic: NSObject {
         DispatchQueue.global(qos: .userInitiated).async {
             [weak self] in
             group.enter()
-            //let config = URLSessionConfiguration.default
             let config = URLSessionConfiguration.ephemeral
             config.urlCredentialStorage = nil
             config.httpAdditionalHeaders = ["User-Agent":"Legit Safari", "Authorization" : "Bearer key1234567"]
@@ -86,8 +79,9 @@ internal class downloaderLogic: NSObject {
                 DispatchQueue.main.async {
                     [weak self] in
                     group.enter()
-                    DownloaderVC.shared.textView?.text = status
+                    DownloaderVC.shared.textView?.text = status.description
                     self?.updateHomeVCText(text: status)
+                    
                     group.leave()
                 }
                 
