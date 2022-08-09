@@ -12,46 +12,37 @@ import SwiftSoup
 // TODO: Add Downloader Struct to souphref 
 
 class multipleDownloads {
-    
-    var isDownloading = false
-    var progress: Float = 0
-    var resumeData: Data?
-    var task: URLSessionDownloadTask?
-    var soupLinks: [Element]
-    
-    init(soupLinks: [Element]) {
-        self.soupLinks = soupLinks
-    }
+	var isDownloading = false
+	var progress: Float = 0
+	var resumeData: Data?
+	var task: URLSessionDownloadTask?
+	var soupLinks: [Element]
+	
+	init(soupLinks: [Element]) {
+		self.soupLinks = soupLinks
+	}
 }
-
-
 
 class singleDownload {
-    
-    
-    var isDownloading = false
-    var progress: Float = 0
-    var resumeData: Data?
-    var task: URLSessionDownloadTask?
-    
-    var hrefLink: String
-    
-    init(hrefLink: String) {
-        self.hrefLink = hrefLink
-    }
+	var isDownloading = false
+	var progress: Float = 0
+	var resumeData: Data?
+	var task: URLSessionDownloadTask?
+	var hrefLink: String
+	
+	init(hrefLink: String) {
+		self.hrefLink = hrefLink
+	}
 }
 
-
 class downloadInfo {
-  
-  let index: Int
-  let name: String
-  let previewURL: URL
-  var downloaded = false
- 
-  init(name: String, previewURL: URL, index: Int) {
-    self.name = name
-    self.previewURL = previewURL
-    self.index = index
-  }
+	let index: Int
+	let name: String
+	let previewURL: URL
+	var downloaded = false
+	init(name: String, previewURL: URL, index: Int) {
+		self.name = name
+		self.previewURL = previewURL
+		self.index = index
+	}
 }

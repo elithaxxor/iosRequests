@@ -10,17 +10,28 @@ import UIKit
 import SafariServices
 
 
-internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
+internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate, URLSessionDelegate
 {
+	
+	lazy var downloadsSession: URLSession = {
+		let configuration = URLSessionConfiguration.background(withIdentifier:urlParser.shared.getUrl().description)
+		
+		return URLSession(configuration: configuration, delegate: self, delegateQueue: nil)
+	}()
+	
+	
+	@objc func dismissKeyboard() {
+		searchBar.resignFirstResponder()
+	}
+	
     private static var check = FtpView()
     private var dl = downloaderLogic()
-   // private let ss = SafariServices
 
     private let backupURL = URL(string: "ftp://arobotsandbox.asuscomm.com:21")!
     private let backupURLString: String  = "ftp://arobotsandbox.asuscomm.com:21"
     
     @IBOutlet weak var FtpTextField: UITextView!
-    @IBOutlet weak var FtpSearchField: UISearchBar!
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBAction func FtpSearchField(sender: UISearchBar) {
         print("[!] Ftp Search Bar Touched. ")
     }
@@ -37,7 +48,6 @@ internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate
     }
     
     
-    @IBOutlet weak var searchBar: UISearchBar!
 
     private func parseUIView(_ uiView: WKWebView) {
         var url = ftpURL.description

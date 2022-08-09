@@ -12,203 +12,6 @@ import SafariServices
 
 
 
-// MARK: To Download [single and multiple] files and storage locally
-internal class singleDownloaderController {
-	public var activeDownloads :  [URL: singleDownload] = [ : ]
-	var downloadsSession: URLSession!
-	
-	internal func cancelDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Download Cancel [!] ")
-
-		guard let download = activeDownloads[downloadInfo.previewURL] else { return }
-		download.task?.cancel()
-		activeDownloads[downloadInfo.previewURL] = nil
-		
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] Is Downloading? \( download.hrefLink.lowercased())")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(download.isDownloading)")
-			DownloaderVC.shared.IP = download.hrefLink.lowercased()
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.TEXT = String(download.hrefLink.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-			
-		}
-		print("[+] Download Cancelled [+] ")
-	}
-	
-	internal func pauseDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Download Pause [!] ")
-		guard let download = activeDownloads[downloadInfo.previewURL], download.isDownloading  else { return }
-		download.task?.cancel(byProducingResumeData: {
-			[weak self] data in
-			download.resumeData = data
-		})
-		download.isDownloading = false
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] Is Downloading? \( download.hrefLink.lowercased())")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(download.isDownloading)")
-			DownloaderVC.shared.IP = download.hrefLink.lowercased()
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.TEXT = String(download.hrefLink.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-			
-		}
-		print("[+] Download Paused [+] ")
-	}
-	internal func resumeDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Resume Download [!]")
-		guard let download = activeDownloads[downloadInfo.previewURL] else { return }
-		if let resumeData = download.resumeData { download.task = downloadsSession.downloadTask(withResumeData: resumeData)
-		} else { download.task = downloadsSession.downloadTask(with: downloadInfo.previewURL) }
-		download.task?.resume()
-		download.isDownloading = true
-		
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] Is Downloading? \( download.hrefLink.lowercased())")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(download.isDownloading)")
-			DownloaderVC.shared.IP = download.hrefLink.lowercased()
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.TEXT = String(download.hrefLink.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-			
-		}
-		
-		print("[+] Download Resumed [+]")
-	}
-	
-	internal func startDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Download [!] ")
-		let download = singleDownload(hrefLink: urlParser.shared.getUrl())
-		download.task = downloadsSession.downloadTask(with: downloadInfo.previewURL)
-		download.task?.resume()
-		download.isDownloading = true
-		activeDownloads[downloadInfo.previewURL] = download
-		
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] Is Downloading? \( download.hrefLink.lowercased())")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(download.isDownloading)")
-			DownloaderVC.shared.IP = download.hrefLink.lowercased()
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading)
-			DownloaderVC.shared.TEXT = String(download.hrefLink.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-			
-		}
-		print("[+] Download Complete [+] ")
-	}
-}
-
-internal class multipleDownloaderController {
-	public var activeDownloads :  [URL: multipleDownloads] = [ : ]
-	var downloadsSession: URLSession!
-	
-	internal func cancelDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Download Cancel [!] ")
-		guard let download = activeDownloads[downloadInfo.previewURL] else { return }
-		download.task?.cancel()
-		activeDownloads[downloadInfo.previewURL] = nil
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] HREF LINK? \(downloadInfo.previewURL)")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(downloadInfo.name)")
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading.description)
-			DownloaderVC.shared.TEXT = String(download.soupLinks.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-		}
-		print("[+] Download Canceled [+] ")
-	}
-	
-	internal func pauseDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Pause [!]")
-		guard let download = activeDownloads[downloadInfo.previewURL], download.isDownloading  else { return }
-		download.task?.cancel(byProducingResumeData: {
-			[weak self] data in
-			download.resumeData = data
-		})
-		download.isDownloading = false
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] HREF LINK? \(downloadInfo.previewURL)")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(downloadInfo.name)")
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading.description)
-			DownloaderVC.shared.TEXT = String(download.soupLinks.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-		}
-		print("[+] Download Pause [+]  ")
-		
-	}
-	internal func resumeDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Resume Download [!]")
-		
-		guard let download = activeDownloads[downloadInfo.previewURL] else { return }
-		
-		if let resumeData = download.resumeData { download.task = downloadsSession.downloadTask(withResumeData: resumeData)
-		} else { download.task = downloadsSession.downloadTask(with: downloadInfo.previewURL) }
-		download.task?.resume()
-		download.isDownloading = true
-		
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] HREF LINK? \(downloadInfo.previewURL)")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(downloadInfo.name)")
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading.description)
-			DownloaderVC.shared.TEXT = String(download.soupLinks.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-		}
-		
-		print("[+] Download Resumed [+]")
-	}
-	internal func startDownload(_ downloadInfo: downloadInfo) {
-		print("[!] User Initiated Download [!] ")
-
-		let download = multipleDownloads(soupLinks: HrefSoup.shared.soupLinks)
-		download.task = downloadsSession.downloadTask(with: downloadInfo.previewURL)
-		download.task?.resume()
-		download.isDownloading = true
-		activeDownloads[downloadInfo.previewURL] = download
-		DispatchQueue.main.async {
-			[weak self] in
-			urlParser.shared.updateHomeVC(text:"[+] HREF LINK? \(downloadInfo.previewURL)")
-			urlParser.shared.updateHomeVC(text: "[?] Is Downloading? \(downloadInfo.name)")
-			DownloaderVC.shared.IP = String(downloadInfo.previewURL.description)
-			DownloaderVC.shared.TEXT = String(download.isDownloading.description)
-			DownloaderVC.shared.TEXT = String(download.soupLinks.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.name.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.index.description)
-			DownloaderVC.shared.TEXT = String(downloadInfo.downloaded.description)
-		}
-		print("[+] Download Complete [+] ")
-	}
-}
-
 
 internal class queryService {
 	fileprivate let defaultSession = URLSession(configuration: .default)
@@ -219,10 +22,10 @@ internal class queryService {
 }
 
 
-internal class downloaderLogic: NSObject, URLSessionDelegate {
+class downloaderLogic : NSObject, URLSessionDelegate {
 	
 	// MARK: Type alias for download closures
-	typealias soupLinks = ([Elements]?, String) -> Void
+	typealias soupLinks = ([Element]?, String) -> Void
 	typealias hrefLink =  (String?, String) -> Void
 	typealias JSONDictionary = [String: Any]
 	
@@ -235,20 +38,16 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 	internal var defaultSession = URLSession(configuration: .default)
 	internal var streamDelegate:  URLSessionStreamDelegate?
 	internal var streamTask: URLSessionStreamTask?
+	internal var sessionDownloadDelegate: URLSessionDownloadDelegate?
 	
 	internal var webSocketDelegate: URLSessionWebSocketDelegate?
 	internal var webSocketTask: URLSessionWebSocketTask?
 	
 	
 	fileprivate var errorMessage = ""
-	fileprivate var hrefLinks: [Elements] = []
-	fileprivate var singleHref: String? {
-		didSet {
-			print("[!] Single Href Set For Download! ")
-			// setDLSession.(completion: ?, String) -> Void)
-		}
-	}
-	// weak var access = downloaderLogic()
+	fileprivate var hrefLinks: [Element] = []
+	fileprivate var singleHref: String = ""
+	
 	public var dlURL: String = "" {
 		didSet {
 			print("[!] Downloader Logic URL set to \(dlURL.description)")
@@ -269,10 +68,9 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 			print("[!] Updating HomeVC [DOWNLOAD TEXT VIEW] --> \(text)")
 			DownloaderVC.shared.textView?.text = text
 			DownloaderVC.shared.viewWillAppear(true)
-			
 		}
 	}
-
+	
 	internal func setFTPSession() throws {
 		let config = URLSessionConfiguration.ephemeral
 		config.urlCredentialStorage = nil
@@ -285,7 +83,7 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 		print("Performed URL Grab on \(sessionURL.absoluteURL)")
 	}
 	
-	internal func setDLSession(completion: @escaping hrefLink) throws {
+	func setDLSession(searchTerm: String, completion: @escaping hrefLink) throws {
 		let dlUrl = urlParser.shared.getUrl()
 		let group = DispatchGroup()
 		dataTask?.cancel()
@@ -304,7 +102,7 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 			
 			
 			
-			self.updateHomeVCText(text: session.description)
+			//self.updateHomeVCText(text: session.description)
 			dataTask = session.dataTask(with: url) {  [weak self] data, response, error in
 				defer { self?.dataTask = nil }
 				let progress = self?.dataTask?.priority
@@ -390,7 +188,7 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 			
 			var session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
 			self.updateHomeVCText(text: session.description)
-
+			
 			dataTask = session.dataTask (with: url) { [weak self] data, response, error in
 				defer { // allows scope of work when call exits
 					self?.dataTask = nil
@@ -438,16 +236,7 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 					print ("file error: \(error)")
 				}
 			}
-			dataTask?.resume()
 			let complete: String = " \n\n ******************* \n [+] Performed URL Grab on \n " // \(String(describing: dataTask.absoluteURL)) \n \n "
-			self.completedText = complete.description
-			print("[+] complete \n \(complete.description)")
-			print("[+] download task bytes recvd \(dataTask?.countOfBytesReceived)")
-			self.updateHomeVCText(text: complete.description)
-			DownloaderVC.shared.TEXT = complete.description
-			
-			urlSession(session, downloadTask: sessionTask!, didFinishDownloadingTo: url)
-
 			let progress = dataTask?.priority
 			let taskResponse = dataTask?.response
 			let taskDescription = dataTask?.taskDescription
@@ -455,29 +244,82 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 			let recvBytes = dataTask?.countOfBytesReceived
 			let expectedRecvBytes = dataTask?.countOfBytesExpectedToReceive
 			let expectedSendBytes = dataTask?.countOfBytesExpectedToSend
+			self.completedText = complete.description
+			print("[+] complete \n \(complete.description)")
+			print("[+] download task bytes recvd \(dataTask?.countOfBytesReceived)")
+			self.updateHomeVCText(text: complete.description)
+			DownloaderVC.shared.TEXT = complete.description
+			urlSession(session, downloadTask: sessionTask!, didFinishDownloadingTo: url)
+			dataTask?.resume()
 			group.leave()
 		}
 		dataTask?.resume()
 		dataTask?.delegate = self
-
 	}
+	
 	private func updateSingleSearchResults(_ data: Data) {
 		var response: JSONDictionary?
-		
-		
+		singleHref.removeAll()
+		do {
+			response = try JSONSerialization.jsonObject(with: data, options: []) as? JSONDictionary
+		} catch let parseError as NSError {
+			errorMessage += "[-] JSONSerialization error: \(parseError.localizedDescription )[-] \n"
+			return
+		}
+		guard let array = response!["results"] as? [Any] else { errorMessage += "[!] Dictionary does not contain results key\n [!] "
+			return
+		}
+		var index = 0
+		for idx in array {
+			if let idx = idx as? JSONDictionary,
+			   let previewURLString = idx["previewUrl"] as? String,
+			   let previewURL = URL(string: previewURLString),
+			   let name = idx["download_1"] as? String {
+				
+				singleHref.append(downloadInfo(name: name, previewURL: previewURL, index: index))
+				
+				index += 1
+			} else {
+				errorMessage += "[-] Problem parsing  [-] \n"
+			}
+		}
 	}
 	private func updateMultipleSearchResults(_ data: Data) {
+		
 		var response: JSONDictionary?
+		hrefLinks.removeAll()
+		do {
+			response = try JSONSerialization.jsonObject(with: data, options: []) as? JSONDictionary
+		} catch let parseError as NSError {
+			errorMessage += "[-] JSONSerialization error: \(parseError.localizedDescription )[-] \n"
+			return
+		}
+		
+		guard let array = response!["results"] as? [Any] else {
+			errorMessage += "[!] Dictionary does not contain results key\n [!]"
+			return
+		}
+		var index = 0
+		for idx in array {
+			if let idx = idx as? JSONDictionary,
+			   let previewURLString = idx["previewUrl"] as? String,
+			   let previewURL = URL(string: previewURLString),
+			   let name = idx["download_1"] as? String {
+				hrefLinks.append(downloadInfo(name: name, previewURL: previewURL, index: index))
+				index += 1
+			} else {
+				errorMessage += "[-] Problem parsing  [-] \n"
+			}
+		}
 	}
-	
 }
 
-extension downloaderLogic: URLSessionDownloadDelegate {
-	
+// extension downloaderLogic: NSObject, URLSessionDelegate  {
+
+extension downloaderLogic: NSObject, URLSessionDownloadDelegate {
 	internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
 		print("[!] URL DownloadTask DidResume at Offset ")
 	}
-	// TODO: Save data to local storage.
 	internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
 		print("[!] Starting URL Delegate Session")
 		guard let data = try? Data(contentsOf: location) else {
@@ -492,7 +334,6 @@ extension downloaderLogic: URLSessionDownloadDelegate {
 		}
 	}
 	internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-		
 		let progress = bytesWritten / totalBytesExpectedToWrite
 		DownloaderVC.shared.progressBar?.progress = Float(progress)
 		DownloaderVC.shared.progressLbl.text = "\(progress * 100)%"
