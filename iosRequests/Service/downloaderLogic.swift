@@ -16,7 +16,7 @@ import SafariServices
 internal class singleDownloaderController {
 	public var activeDownloads :  [URL: singleDownload] = [ : ]
 	var downloadsSession: URLSession!
-
+	
 	internal func cancelDownload(_ downloadInfo: downloadInfo) {
 		print("[!] User Initiated Download Cancel [!] ")
 
@@ -220,14 +220,25 @@ internal class queryService {
 
 
 internal class downloaderLogic: NSObject, URLSessionDelegate {
+	
+	// MARK: Type alias for download closures
 	typealias soupLinks = ([Elements]?, String) -> Void
 	typealias hrefLink =  (String?, String) -> Void
-	let data = Data()
-
+	typealias JSONDictionary = [String: Any]
+	
+	public let data = Data()
 	static let shared = downloaderLogic()
+	
 	internal var dataTask: URLSessionDataTask?
-	internal var downloaderDelegate = URLSessionDownloadDelegate.self
-	internal let defaultSession = URLSession(configuration: .default)
+	internal var sessionTask: URLSessionDownloadTask?
+	internal var taskMetrics: URLSessionTaskMetrics?
+	internal var defaultSession = URLSession(configuration: .default)
+	internal var streamDelegate:  URLSessionStreamDelegate?
+	internal var streamTask: URLSessionStreamTask?
+	
+	internal var webSocketDelegate: URLSessionWebSocketDelegate?
+	internal var webSocketTask: URLSessionWebSocketTask?
+	
 	
 	fileprivate var errorMessage = ""
 	fileprivate var hrefLinks: [Elements] = []
@@ -274,20 +285,15 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 		print("Performed URL Grab on \(sessionURL.absoluteURL)")
 	}
 	
-	
-	
-	
 	internal func setDLSession(completion: @escaping hrefLink) throws {
 		let dlUrl = urlParser.shared.getUrl()
 		let group = DispatchGroup()
 		dataTask?.cancel()
+		
 		print("[!] Starting Fetch on \(dlUrl)")
+		group.enter()
 		if var urlComponents = URLComponents(string: dlUrl) {
 			guard let url = urlComponents.url else { return }
-			
-			//        DispatchQueue.global(qos: .userInitiated).async {
-			//            [weak self] in
-			group.enter()
 			let config = URLSessionConfiguration.ephemeral
 			config.urlCredentialStorage = nil
 			config.httpAdditionalHeaders = ["User-Agent":"Legit Safari", "Authorization" : "Bearer key1234567"]
@@ -295,10 +301,20 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 			config.requestCachePolicy = NSURLRequest.CachePolicy.returnCacheDataElseLoad
 			// guard let sessionURL = URL(string: dlUrl)  else { return  } //?? URL(string: "https://httpbin.org/anything")
 			var session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
-			self.updateHomeVCText(text: session.description)
 			
+			
+			
+			self.updateHomeVCText(text: session.description)
 			dataTask = session.dataTask(with: url) {  [weak self] data, response, error in
 				defer { self?.dataTask = nil }
+				let progress = self?.dataTask?.priority
+				let taskResponse = self?.dataTask?.response
+				let taskDescription = self?.dataTask?.taskDescription
+				let sentBytes = self?.dataTask?.countOfBytesSent
+				let recvBytes = self?.dataTask?.countOfBytesReceived
+				let expectedRecvBytes = self?.dataTask?.countOfBytesExpectedToReceive
+				let expectedSendBytes = self?.dataTask?.countOfBytesExpectedToSend
+				
 				
 				if let error = error {
 					self?.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
@@ -306,7 +322,7 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 					let data = data,
 					let response = response as? HTTPURLResponse,
 					response.statusCode == 200 {
-					self?.updateSearchResults(data)
+					self?.updateSingleSearchResults(data)
 					
 					var status: String = "[!] Starting Fetch on [dlURL] \(String(describing: self?.dlURL)) \n \t [!] [SESSION] \(session) \n \t [!] [SESSION-URL] \(urlComponents) \n [!] performing URL Grab on \(session.description) "
 					print(status)
@@ -335,6 +351,14 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 					print ("file error: \(error)")
 				}
 			}
+			let progress = dataTask?.priority
+			let taskResponse = dataTask?.response
+			let taskDescription = dataTask?.taskDescription
+			let sentBytes = dataTask?.countOfBytesSent
+			let recvBytes = dataTask?.countOfBytesReceived
+			let expectedRecvBytes = dataTask?.countOfBytesExpectedToReceive
+			let expectedSendBytes = dataTask?.countOfBytesExpectedToSend
+			
 			let complete: String = " \n\n ******************* \n [+] Performed URL Grab on \n " // \(String(describing: dataTask.absoluteURL)) \n \n "
 			self.completedText = complete.description
 			print("[+] complete \n \(complete.description)")
@@ -350,29 +374,35 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 	
 	
 	internal func setMultipleDLSession(completion: @escaping soupLinks) throws {
-		
 		let dlUrl = urlParser.shared.getUrl()
 		let group = DispatchGroup()
 		dataTask?.cancel()
 		
+		group.enter()
 		print("[!] Starting Fetch on \(dlUrl)")
 		if var urlComponents = URLComponents(string: dlUrl) {
 			guard let url = urlComponents.url else { return }
-			
-			group.enter()
 			let config = URLSessionConfiguration.ephemeral
 			config.urlCredentialStorage = nil
 			config.httpAdditionalHeaders = ["User-Agent":"Legit Safari", "Authorization" : "Bearer key1234567"]
 			config.timeoutIntervalForRequest = 30
 			config.requestCachePolicy = NSURLRequest.CachePolicy.returnCacheDataElseLoad
-			// guard let sessionURL = URL(string: dlUrl)  else { return  } //?? URL(string: "https://httpbin.org/anything")
+			
 			var session = URLSession(configuration: config, delegate: self, delegateQueue: .main)
 			self.updateHomeVCText(text: session.description)
-			
+
 			dataTask = session.dataTask (with: url) { [weak self] data, response, error in
 				defer { // allows scope of work when call exits
 					self?.dataTask = nil
 				}
+				let progress = self?.dataTask?.priority
+				let taskResponse = self?.dataTask?.response
+				let taskDescription = self?.dataTask?.taskDescription
+				let sentBytes = self?.dataTask?.countOfBytesSent
+				let recvBytes = self?.dataTask?.countOfBytesReceived
+				let expectedRecvBytes = self?.dataTask?.countOfBytesExpectedToReceive
+				let expectedSendBytes = self?.dataTask?.countOfBytesExpectedToSend
+				
 				
 				if let error = error {
 					self?.errorMessage += "DataTask error: " + error.localizedDescription + "\n"
@@ -380,9 +410,8 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 					let data = data,
 					let response = response as? HTTPURLResponse,
 					response.statusCode == 200 {
-					self?.updateSearchResults(data)
-					
-					var status: String = "[!] Starting Fetch on [dlURL] \(String(describing: self?.dlURL)) \n \t [!] [SESSION] \(session) \n \t [!] [SESSION-URL] \(urlComponents) \n [!] performing URL Grab on \(session.description) "
+					self?.updateMultipleSearchResults(data)
+					let status: String = "[!] Starting Fetch on [dlURL] \(String(describing: self?.dlURL)) \n \t [!] [SESSION] \(session) \n \t [!] [SESSION-URL] \(urlComponents) \n [!] performing URL Grab on \(session.description) "
 					print(status)
 					
 					group.wait()
@@ -408,47 +437,61 @@ internal class downloaderLogic: NSObject, URLSessionDelegate {
 				} catch {
 					print ("file error: \(error)")
 				}
-				
 			}
-			
 			dataTask?.resume()
 			let complete: String = " \n\n ******************* \n [+] Performed URL Grab on \n " // \(String(describing: dataTask.absoluteURL)) \n \n "
 			self.completedText = complete.description
 			print("[+] complete \n \(complete.description)")
 			print("[+] download task bytes recvd \(dataTask?.countOfBytesReceived)")
 			self.updateHomeVCText(text: complete.description)
-			
 			DownloaderVC.shared.TEXT = complete.description
+			
+			urlSession(session, downloadTask: sessionTask!, didFinishDownloadingTo: url)
+
+			let progress = dataTask?.priority
+			let taskResponse = dataTask?.response
+			let taskDescription = dataTask?.taskDescription
+			let sentBytes = dataTask?.countOfBytesSent
+			let recvBytes = dataTask?.countOfBytesReceived
+			let expectedRecvBytes = dataTask?.countOfBytesExpectedToReceive
+			let expectedSendBytes = dataTask?.countOfBytesExpectedToSend
 			group.leave()
 		}
 		dataTask?.resume()
+		dataTask?.delegate = self
+
+	}
+	private func updateSingleSearchResults(_ data: Data) {
+		var response: JSONDictionary?
+		
 		
 	}
-	private func updateSearchResults(_ data: Data) {
+	private func updateMultipleSearchResults(_ data: Data) {
+		var response: JSONDictionary?
 	}
+	
 }
 
 extension downloaderLogic: URLSessionDownloadDelegate {
 	
+	internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
+		print("[!] URL DownloadTask DidResume at Offset ")
+	}
 	// TODO: Save data to local storage.
-	func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-		
+	internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
 		print("[!] Starting URL Delegate Session")
 		guard let data = try? Data(contentsOf: location) else {
 			print("[-] Data Could Not Be Parsed. ")
 			return
 		}
-		print("******************************************** \n [DATA] \n \n ")
-		print(data)
-		print("******************************************** \n [DATA] \n \n ")
+		print("******************************************** \n [DATA] \n \n \(data) \n\n ******************************************** \n [DATA] \n \n ")
 		DispatchQueue.main.async { [weak self] in
 			FileLogic.work.createFolder()
 			FileLogic.work.saveData(data: data, name: location.description)
 			DownloaderVC.shared.progressLbl.isHidden = true
 		}
-		
 	}
-	func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+	internal func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
 		
 		let progress = bytesWritten / totalBytesExpectedToWrite
 		DownloaderVC.shared.progressBar?.progress = Float(progress)
