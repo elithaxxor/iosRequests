@@ -103,7 +103,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" showsMenuAsPrimaryAction="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yb1-pd-M5H">
-                                <rect key="frame" x="166" y="594" width="65" height="30"/>
+                                <rect key="frame" x="166" y="594" width="65" height="47"/>
                                 <menu key="menu" id="Kdh-3x-EvS">
                                     <children>
                                         <command title="smb" discoverabilityTitle="" menuElementState="on" id="sTK-jS-LhA" userLabel="smb">
@@ -141,11 +141,6 @@
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" ambiguous="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="r2g-Sq-HjG">
                                 <rect key="frame" x="117" y="582" width="150" height="4"/>
                             </progressView>
-                            <searchBar contentMode="redraw" fixedFrame="YES" barStyle="black" searchBarStyle="minimal" text="" placeholder="ipv4, smb, ftp or http(s) " translatesAutoresizingMaskIntoConstraints="NO" id="xpW-gy-apI" userLabel="uiSearchBar">
-                                <rect key="frame" x="19" y="614" width="358" height="140"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="URL" keyboardAppearance="alert" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
-                            </searchBar>
                             <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WR8-do-Kw7" userLabel="dlView">
                                 <rect key="frame" x="32" y="87" width="336" height="466"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -185,6 +180,11 @@
                                 <color key="textColor" red="0.093810401856899261" green="0.63903075456619263" blue="0.19023075699806213" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <searchBar contentMode="redraw" fixedFrame="YES" barStyle="black" searchBarStyle="minimal" text="" placeholder="ipv4, smb, ftp or http(s) " translatesAutoresizingMaskIntoConstraints="NO" id="xpW-gy-apI" userLabel="uiSearchBar">
+                                <rect key="frame" x="10" y="634" width="358" height="140"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits" spellCheckingType="no" keyboardType="URL" keyboardAppearance="alert" returnKeyType="done" enablesReturnKeyAutomatically="YES"/>
+                            </searchBar>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="labelColor"/>
@@ -213,11 +213,11 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="dlView" destination="WR8-do-Kw7" id="KVX-2U-sFu"/>
+                        <outlet property="dlView" destination="WR8-do-Kw7" id="OwZ-Mj-NjM"/>
                         <outlet property="progressBar" destination="r2g-Sq-HjG" id="BO2-D8-dYO"/>
                         <outlet property="progressLbl" destination="4Lj-nm-Eze" id="UvO-Hl-SKp"/>
                         <outlet property="textView" destination="w78-Kc-bn3" id="ZR4-JC-gpf"/>
-                        <outlet property="uiSearchBar" destination="xpW-gy-apI" id="T27-UU-ckN"/>
+                        <outlet property="uiSearchBar" destination="xpW-gy-apI" id="gXt-t2-vNb"/>
                         <outlet property="urlTextView" destination="f2G-oU-pjW" id="UU5-4I-pB8"/>
                         <segue destination="UO6-c0-gqw" kind="show" identifier="HrefView" id="QPH-st-wFS"/>
                         <segue destination="Eih-fp-ZcH" kind="show" identifier="HrefSoup" id="WUt-Ni-Je9"/>

@@ -11,6 +11,7 @@ import Foundation
 import SwiftSoup
 @IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate {
     
+    public var downloadsSession: URLSession!
     public var soupLinks : [Element] = [Element]()
     static let shared = DownloaderVC()
     private var dl = downloaderLogic()
@@ -21,6 +22,15 @@ import SwiftSoup
         didSet {
             print("[+] IP Value Set by [URL PARSER] \n \(IP)")
             urlTextView?.text = IP.lowercased()
+            viewDidLoad()
+        }
+    }
+    
+    internal var TEXT: String = "" {
+        didSet {
+            print("[+] TEXT Value Set by [URL PARSER] \n \(IP)")
+            textView?.text = TEXT.lowercased()
+            viewDidLoad()
         }
     }
     
@@ -28,7 +38,7 @@ import SwiftSoup
     internal var PORT: String = ""
     fileprivate var imagePicker = UIImagePickerController()
 
-    // TODO: Add to storyboard
+    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var progressBar: UIProgressView?
     @IBOutlet weak var progressLbl: UILabel!
@@ -157,11 +167,13 @@ import SwiftSoup
     internal func handleHttpDwn(textViewData: String) {
         //https://archive.org/download/nes-romset-ultra-us/1942%20%28U%29%20%5B%21%5D.zip
         // let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
+        dl.dlURL = textViewData
 
         print("[!] [textview URL] \(dl.dlURL)")
         print("[!] [download URL] \(textViewData)")
-        dl.dlURL = textViewData
-        let data = try? dl.setDLSession()
+//        let data = try? dl.setDLSession(completion: { dl.dlURL , <#String#> in
+//            <#code#>
+//        })
         //FileLogic
     }
     
@@ -176,13 +188,16 @@ import SwiftSoup
     @objc func didUpdateNotification(_ notification: Notification) throws {
         print("[!].. Editing notification center.. ")
         guard let fetchURL = notification.object as? String else { throw notificationError.passNotificationErr }
-        try?dl.setDLSession()
+            // try?dl.setDLSession()
     }
     
     @objc func hrefSoupNotification(_ notification: Notification) throws {
         print("[!] Notification [HREF] on homeVC recieved from Soup ")
-        guard let hrefURL = notification.object as? String else { throw notificationError.fetchSoupErr }
+        guard let hrefURL = notification.object as? [Element] else { throw notificationError.fetchSoupErr }
+        print("[+] [+] homeVC recieved [NOTIFICATION] from [HREF-Soup] \(hrefURL)")
     }
+    
+    
     private func printHrefSoupList(ahref: [Element] , count: Int, ptag: [Element]) {
         print("[+] Parsing users Soup Reqeust --> Displaying available downloads")
         print(".. \(count) \(ahref) \(ptag)")
@@ -210,32 +225,52 @@ import SwiftSoup
         urlTextView?.text = urlParser.url.description
         urlTextView?.text = IP
         urlTextView?.text = urlParser.fetch.getUrl()
-
+        textView?.text = TEXT.lowercased()
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
-        view.addSubview(dlView!)
+        if dlView != nil {
+            view.addSubview(dlView!)
+        }
+        setupViews()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         print("[!][!] [VIEW WILL APPEAR CALLED] ")
-        urlTextView?.text = urlParser.url
+        urlTextView?.text = urlParser.shared.getUrl()
         
         if dlView != nil {
             view.addSubview(dlView!)
         }
+        setupViews()
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(false)
         print("[!][!] [viewDidAppear CALLED] ")
-        urlTextView?.text = urlParser.url.description
-        urlTextView?.text = urlParser.url.description
+        
+        let soupUrl = HrefSoup.shared.soupURL
+        let parserUrl =  urlParser.shared.getUrl()
+        if soupUrl.isEmpty {
+            urlTextView?.text = parserUrl
+            
+        } else { urlTextView?.text = soupUrl
+        }
+        
+        
+        //urlTextView?.text = urlParser.url.description
        /// view.reloadInputViews()
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
+        print(NotificationCenter.Notifications.Element.Name("soupHref"))
+        print(Notification.Name.soupHref.rawValue)
+        print(Notification.Name("soupHref"))
+        print(HrefSoup.shared.subscriptions)
+        
+        
         if dlView != nil {
             view.addSubview(dlView!)
         }
+        setupViews()
     }
     override func reloadInputViews() {
         super.reloadInputViews()
@@ -243,6 +278,7 @@ import SwiftSoup
         urlTextView?.text = urlParser.url.description
         urlTextView?.text = IP
         view.reloadInputViews()
+        setupViews()
         print("[!][!] --> URLPARSER \(urlParser.url.description) ")
         print("[!][!] --> IP \(IP) ")
     }
@@ -253,10 +289,10 @@ import SwiftSoup
     
      func setupViews() {
         print("[!] Laying out [TABLE CELL VIEWS] ")
-        self.tableView.reloadData()
-        self.tableView.isHidden = false
-        self.tableView.addSubview(UITableView())
-        self.tableView.layoutSubviews()
+        self.tableView?.reloadData()
+        self.tableView?.isHidden = false
+        self.tableView?.addSubview(UITableView())
+        self.tableView?.layoutSubviews()
     }
     
     

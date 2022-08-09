@@ -9,6 +9,7 @@ import Foundation
 
 internal class urlParser {
     
+    static let shared = urlParser() 
     private let dlVC = DownloaderVC()
     static var fetch = urlParser()
     static var url = "https://kimcartoon.li/Cartoon/The-Simpsons-Season-33"
@@ -42,9 +43,11 @@ internal class urlParser {
             [weak self] in
             print("[!] Updating HomeVC [URL TEXT VIEW] --> \(text)")
             //self?.dlVC.urlTextView?.text = text
-            DownloaderVC.shared.urlTextView?.text = text
+            DownloaderVC.shared.urlTextView?.text = text.description
+            DownloaderVC.shared.TEXT = text.description
+            self?.dlVC.TEXT = text.description
             DownloaderVC.shared.viewWillAppear(true)
-            DownloaderVC.shared.viewDidAppear(true)
+           // DownloaderVC.shared.viewDidAppear(true)
         }
    
     }

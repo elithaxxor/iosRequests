@@ -20,7 +20,8 @@ import Combine
     public let name = Notification.Name("")
     public var subscriptions = Set<AnyCancellable>()
     private let homeVC = DownloaderVC()
-    
+    static var shared = HrefSoup()
+
     
  
     fileprivate let urlTableViewCell = UrlTableViewCell()
@@ -73,7 +74,8 @@ import Combine
     }
     
     private func parseInfo () {
-        
+        self.searchBar?.text = self.soupURL
+
         DispatchQueue.global(qos: .userInitiated).async {
             [weak self] in
             print("[!] View Did Load- Passed \(String(describing: self?.soupURL))")
@@ -84,7 +86,6 @@ import Combine
             self?.setupViews()
             
             self?.textView?.text = self?.soupURL.description
-            self?.searchBar?.text = self?.soupURL
             let hmtlString = self?.getHTML(textViewData: self?.soupURL)
             self?.handleHTTPSoup(textViewData: hmtlString)
         }
@@ -97,7 +98,7 @@ import Combine
             DownloaderVC.shared.urlTextView?.text = urlParser.fetch.getUrl().description
             DownloaderVC.shared.soupLinks = self!.soupLinks
             DownloaderVC.shared.textView?.text =  self?.soupLinks.description
-            
+            DownloaderVC.shared.TEXT = (self?.soupLinks.description)!
         }
     }
   
@@ -215,8 +216,10 @@ import Combine
   
                 
                 group.wait()
+                
                 DispatchQueue.main.async {
                     [weak self] in
+                    group.enter()
                     print("[!] Pushing to main thread, to update homeVC with HREF SOUP LINKS \n [!][!] Saving data to notification center")
                     NotificationCenter.default
                         .post(name: NSNotification.Name(
