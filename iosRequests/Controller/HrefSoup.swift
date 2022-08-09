@@ -14,9 +14,8 @@ import Combine
 // TODO: Add beaituflsoup list to subscriber (use async background)
 // MARK: Test String https://www.tvseries.watch/series/the-simpsons
 
-@IBDesignable class HrefSoup: ViewControllerLogger, URLSessionDelegate
+@IBDesignable internal class HrefSoup: ViewControllerLogger, URLSessionDelegate
 {
-	
 	lazy var downloadsSession: URLSession = {
 		let configuration = URLSessionConfiguration.background(withIdentifier:urlParser.shared.getUrl().description)
 		

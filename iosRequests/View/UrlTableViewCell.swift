@@ -8,9 +8,10 @@
 import UIKit
 import SwiftSoup
 
-class UrlTableViewCell: UITableViewCell {
+@IBDesignable class UrlTableViewCell: UITableViewCell
+{
 	
-    var hrefLinks: [Element]? {
+    internal var hrefLinks: [Element]? {
         didSet {
             titleLbl.text = hrefLinks?.description.self
         }

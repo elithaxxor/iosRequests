@@ -32,7 +32,7 @@ extension HrefSoup: UISearchBarDelegate {
 			UIApplication.shared.isNetworkActivityIndicatorVisible = false
 			
 			if let results = results {
-				self?.soupLinks = results
+				self?.soupLinks.description = results
 				self?.tableView.reloadData()
 				self?.tableView.setContentOffset(CGPoint.zero, animated: false)
 			}

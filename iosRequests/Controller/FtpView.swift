@@ -10,8 +10,13 @@ import UIKit
 import SafariServices
 
 
-internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate, URLSessionDelegate
+@IBDesignable internal class FtpView: ViewControllerLogger, WKNavigationDelegate, WKUIDelegate, URLSessionDelegate
 {
+	
+	lazy var tapRecognizer: UITapGestureRecognizer = {
+		var recognizer = UITapGestureRecognizer(target:self, action: #selector(dismissKeyboard))
+		return recognizer
+	}()
 	
 	lazy var downloadsSession: URLSession = {
 		let configuration = URLSessionConfiguration.background(withIdentifier:urlParser.shared.getUrl().description)

@@ -9,8 +9,8 @@
 import UIKit
 import Foundation
 import SwiftSoup
-@IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate, URLSessionDelegate {
-	
+@IBDesignable class DownloaderVC: ViewControllerLogger, UIImagePickerControllerDelegate,  UINavigationControllerDelegate, URLSessionDelegate
+{
 	public var downloadsSession: URLSession!
 	public var soupLinks : [Element] = [Element]()
 	static let shared = DownloaderVC()
@@ -38,6 +38,17 @@ import SwiftSoup
 	internal var USER: String = ""
 	internal var PORT: String = ""
 	fileprivate var imagePicker = UIImagePickerController()
+	
+	
+
+	lazy var tapRecognizer: UITapGestureRecognizer = {
+		var recognizer = UITapGestureRecognizer(target:self, action: #selector(dismissKeyboard))
+		return recognizer
+	}()
+	@objc func dismissKeyboard() {
+		searchBar.resignFirstResponder()
+	}
+	
 	
 	
 	@IBOutlet weak var tableView: UITableView!
@@ -74,15 +85,15 @@ import SwiftSoup
 	}
 	
 	
-	@IBOutlet weak var uiSearchBar: UISearchBar! {
+	@IBOutlet weak var searchBar: UISearchBar! {
 		
 		didSet {
 			DispatchQueue.main.async {
 				[weak self] in
 				
 				print("[!] UI SearchBar set")
-				let text = self?.uiSearchBar?.text?.lowercased()
-				let newUrl = urlParser.fetch.changeUrl(newLink: self?.uiSearchBar?.text)
+				let text = self?.searchBar?.text?.lowercased()
+				let newUrl = urlParser.fetch.changeUrl(newLink: self?.searchBar?.text)
 				if newUrl.isEmpty || newUrl.hasPrefix("http://") {
 					var dialogMessage = UIAlertController(title: "Attention", message: "tls required, add https", preferredStyle: .alert)
 				}
@@ -115,20 +126,20 @@ import SwiftSoup
 	
 	@IBAction func ftpBtn (_ sender: UIButton) {
 		print("[FTP] Pressed")
-		let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
+		let fetchURL = urlParser.fetch.changeUrl(newLink: searchBar?.text)
 		handleFTP(textViewData: fetchURL)
 		performSegue(withIdentifier: "FtpSeg", sender: self)
 	}
 	@IBAction func smbBtn(_ sender: UIButton) {
 		print("[SMB] Btn Pressed ")
-		let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text)
+		let fetchURL = urlParser.fetch.changeUrl(newLink: searchBar?.text)
 		print("[SMB] URL \(fetchURL)")
 		
 		handleSMB(textViewData: fetchURL)
 		performSegue(withIdentifier: "SmbView", sender: self)
 	}
 	@IBAction func httpSoupBtn(_ sender: UIButton) {
-		let fetchURL = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased()
+		let fetchURL = urlParser.fetch.changeUrl(newLink: searchBar?.text).lowercased()
 		if fetchURL.hasPrefix("http://") {
 			print("download url requires TLS \(fetchURL)")
 			var downloadAlert = UIAlertController(title: "add https://", message: "tls required, add https://", preferredStyle: .alert)
@@ -146,7 +157,7 @@ import SwiftSoup
 	@IBAction func httpDwnBtn(_ sender: UIButton) {
 		print("[HTTP-DWNLD] Btn Pressed ")
 		let backupDownURL = "https://www.google.com"
-		var downlUrl = urlParser.fetch.changeUrl(newLink: uiSearchBar?.text).lowercased().description
+		var downlUrl = urlParser.fetch.changeUrl(newLink: searchBar?.text).lowercased().description
 		
 		if downlUrl.hasPrefix("http://") {
 			print("download url requires TLS \(downlUrl)")
@@ -321,7 +332,7 @@ import SwiftSoup
 	override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 		if segue.identifier == "FtpSeg"  {
 			let seg = segue.destination as? FtpView
-			let url = self.uiSearchBar.text
+			let url = self.searchBar.text
 			print("[!] URL for FTP being passed: \(String(describing: url))")
 			seg?.FtpTextField?.text = url
 			seg?.ftpURL = url ?? "ftp://arobotsandbox.asuscomm.com:21"
@@ -330,14 +341,14 @@ import SwiftSoup
 		
 		if segue.identifier == "SmbView"  {
 			let seg = segue.destination as? SmbView
-			let url = "smb://\(String(describing: self.uiSearchBar.text)):139"
+			let url = "smb://\(String(describing: self.searchBar.text)):139"
 			seg?.smbURL = url ?? "smb://arobotsandbox.asuscomm.com:139"
 			
 		}
 		
 		if segue.identifier == "HrefSoup"  {
 			let seg = segue.destination as? HrefSoup
-			let url = "https://\(String(describing: self.uiSearchBar.text))"
+			let url = "https://\(String(describing: self.searchBar.text))"
 			seg?.soupURL = url
 			// seg?.performSegue(withIdentifier: url!, sender: self)
 			
@@ -351,7 +362,7 @@ extension DownloaderVC: UISearchBarDelegate {
 	func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
 		if (filteredData != nil) == searchText.isEmpty
 		{
-			print("[!] Downloader SearchBar was Used! \n \(uiSearchBar.text?.description)")
+			print("[!] Downloader SearchBar was Used! \n \(searchBar.text?.description)")
 			
 		}
 	}

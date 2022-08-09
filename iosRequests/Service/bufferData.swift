@@ -34,18 +34,7 @@
 //    }
 //    
 //}
-//
-//extension DispatchData {
-//    
-//    /// Creates a `DispatchData` from a given `ByteBuffer`. The entire readable portion of the buffer will be read.
-//    /// - parameter buffer: The buffer to read.
-//    @inlinable
-//    public init(buffer: ByteBuffer) {
-//        var buffer = buffer
-//        self = buffer.readDispatchData(length: buffer.readableBytes)!
-//    }
-//    
-//}
+
 //
 //
 //extension ByteBuffer {

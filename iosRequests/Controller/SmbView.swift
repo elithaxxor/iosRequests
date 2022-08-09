@@ -8,9 +8,9 @@
 import UIKit
 import WebKit
 
-@IBDesignable
-internal class SmbView: ViewControllerLogger, URLSessionDelegate {
-    
+@IBDesignable internal class SmbView: ViewControllerLogger, URLSessionDelegate
+{
+	
     fileprivate let parseUrl = urlParser.url.lowercased()
 	lazy var downloadsSession: URLSession = {
 		let configuration = URLSessionConfiguration.background(withIdentifier:urlParser.shared.getUrl().description)
@@ -22,6 +22,11 @@ internal class SmbView: ViewControllerLogger, URLSessionDelegate {
 	@objc func dismissKeyboard() {
 		searchBar.resignFirstResponder()
 	}
+	
+	lazy var tapRecognizer: UITapGestureRecognizer = {
+		var recognizer = UITapGestureRecognizer(target:self, action: #selector(dismissKeyboard))
+		return recognizer
+	}()
 	
 	
     @IBInspectable private let backupURL = URL(string: "smb://arobotsandbox.asuscomm.com:445")!

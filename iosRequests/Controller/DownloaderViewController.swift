@@ -11,14 +11,16 @@ import AVFoundation
 import AVKit
 import SwiftSoup
 
-class downloaderViewController: ViewControllerLogger, URLSessionDelegate
+class DownloaderViewController: ViewControllerLogger, URLSessionDelegate
 {
 	
 	@IBOutlet weak var tableView: UITableView!
 	@IBOutlet weak var searchBar: UISearchBar!
 	
 	internal let query = downloaderLogic()
-	internal let downloadService = DownloadService()
+	internal let singleDownloadService = singleDownloaderControl()
+	internal let multipleDownloadService = multipleDownloaderControl()
+	
 	fileprivate var searchResults: [Element] = []
 	
 	
